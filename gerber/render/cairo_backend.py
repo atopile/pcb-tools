@@ -23,7 +23,6 @@ except ImportError:
 
 from operator import mul
 import tempfile
-import copy
 import os
 
 from .render import GerberContext, RenderSettings
