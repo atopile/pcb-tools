@@ -1,7 +1,7 @@
-pcb-tools
+pcb-tools - unofficial but maintained fork
 ============
-[![CI](https://github.com/curtacircuitos/pcb-tools/workflows/pcb-tools/badge.svg)](https://github.com/curtacircuitos/pcb-tools/actions)
-[![Coverage](https://codecov.io/gh/curtacircuitos/pcb-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/curtacircuitos/pcb-tools)
+[![CI](https://github.com/MacroFab/pcb-tools/workflows/pcb-tools/badge.svg)](https://github.com/MacroFab/pcb-tools/actions)
+[![Coverage](https://codecov.io/gh/MacroFab/pcb-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/MacroFab/pcb-tools)
 [![Docs](https://readthedocs.org/projects/pcb-tools/badge/?version=latest)](https://readthedocs.org/projects/pcb-tools/?badge=latest)
 
 Tools to handle Gerber and Excellon files in Python.
@@ -36,7 +36,7 @@ Source code for this example can be found [here](examples/cairo_example.py).
 
 Install from source:
 ```
-$ git clone https://github.com/curtacircuitos/pcb-tools.git
+$ git clone https://github.com/MacroFab/pcb-tools.git
 $ cd pcb-tools
 $ pip install -r requirements.txt
 $ python setup.py install
