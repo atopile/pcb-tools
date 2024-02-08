@@ -32,8 +32,9 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Test with pytest
         run: |
-          pytest
-
+          rm -f .coverage
+          rm -f coverage.xml
+          pytest --cov=./ --cov-report=xml
       - name: Coverage comment
         id: coverage_comment
         uses: py-cov-action/python-coverage-comment-action@v3
