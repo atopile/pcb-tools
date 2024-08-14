@@ -29,7 +29,7 @@ METADATA = {
     'description': "Utilities to handle Gerber (RS-274X) files.",
     'license': "Apache",
     'keywords': "pcb gerber tools",
-    'url': "http://github.com/curtacircuitos/pcb-tools",
+    'url': "https://github.com/MacroFab/pcb-tools",
     'packages': ['gerber', 'gerber.render'],
     'long_description': read('README.md'),
     'classifiers': [
@@ -40,7 +40,7 @@ METADATA = {
 }
 
 SETUPTOOLS_METADATA = {
-    'install_requires': ['cairocffi==0.6'],
+    'install_requires': ['cairocffi==1.2.0'],
     'entry_points': {
         'console_scripts': [
             'gerber-render = gerber.__main__:main',
