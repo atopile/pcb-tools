@@ -13,7 +13,7 @@ In the pipeline column output the status of a certain step in github actions wor
 | 3.9.x   | [![Python 3.9](https://github.com/MacroFab/pcb-tools/actions/workflows/python39.yaml/badge.svg)](https://github.com/MacroFab/pcb-tools/actions/workflows/python39.yaml) | |
 | 3.10.x  | [![Python 3.10](https://github.com/MacroFab/pcb-tools/actions/workflows/python310.yaml/badge.svg)](https://github.com/MacroFab/pcb-tools/actions/workflows/python310.yaml) | |
 | 3.11.x  | [![Python 3.11](https://github.com/MacroFab/pcb-tools/actions/workflows/python311.yaml/badge.svg)](https://github.com/MacroFab/pcb-tools/actions/workflows/python311.yaml) | |
-| 3.12.x  | [![Python 3.12](https://github.com/MacroFab/pcb-tools/actions/workflows/python310.yaml/badge.svg)](https://github.com/MacroFab/pcb-tools/actions/workflows/python312.yaml) | |
+| 3.12.x  | [![Python 3.12](https://github.com/MacroFab/pcb-tools/actions/workflows/python312.yaml/badge.svg)](https://github.com/MacroFab/pcb-tools/actions/workflows/python312.yaml) | |
 
 Usage Example:
 ---------------
