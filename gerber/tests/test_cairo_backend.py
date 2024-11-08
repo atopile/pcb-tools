@@ -37,7 +37,8 @@ def _DISABLED_test_render_simple_contour():
 def _DISABLED_test_render_single_contour_1():
     """Umaco example of a single contour
 
-    The resulting image for this test is used by other tests because they must generate the same output."""
+    The resulting image for this test is used by other tests because they must generate the same output.
+    """
     _test_render(
         "resources/example_single_contour_1.gbr", "golden/example_single_contour.png"
     )
@@ -46,7 +47,8 @@ def _DISABLED_test_render_single_contour_1():
 def _DISABLED_test_render_single_contour_2():
     """Umaco exapmle of a single contour, alternate contour end order
 
-    The resulting image for this test is used by other tests because they must generate the same output."""
+    The resulting image for this test is used by other tests because they must generate the same output.
+    """
     _test_render(
         "resources/example_single_contour_2.gbr", "golden/example_single_contour.png"
     )

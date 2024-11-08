@@ -15,8 +15,7 @@ NCDRILL_FILE = os.path.join(os.path.dirname(__file__), "resources/ncdrill.DRD")
 
 
 def test_format_detection():
-    """ Test file type detection
-    """
+    """Test file type detection"""
     with open(NCDRILL_FILE, "r", newline=None) as f:
         data = f.read()
     settings = detect_excellon_format(data)
@@ -203,8 +202,7 @@ def test_parse_unknown():
 
 
 def test_drill_hit_units_conversion():
-    """ Test unit conversion for drill hits
-    """
+    """Test unit conversion for drill hits"""
     # Inch hit
     settings = FileSettings(units="inch")
     tool = ExcellonTool(settings, diameter=1.0)
@@ -263,8 +261,7 @@ def test_drill_hit_offset():
 
 
 def test_drill_slot_units_conversion():
-    """ Test unit conversion for drill hits
-    """
+    """Test unit conversion for drill hits"""
     # Inch hit
     settings = FileSettings(units="inch")
     tool = ExcellonTool(settings, diameter=1.0)
@@ -343,8 +340,7 @@ def test_drill_slot_bounds():
 
 
 def test_handling_multi_line_g00_and_g1():
-    """Route Mode statements with coordinates on separate line are handled
-    """
+    """Route Mode statements with coordinates on separate line are handled"""
     test_data = """
 %
 M48

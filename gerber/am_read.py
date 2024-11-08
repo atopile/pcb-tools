@@ -113,8 +113,10 @@ class Scanner:
 
 def print_instructions(instructions):
     for opcode, argument in instructions:
-        print("%s %s" % (OpCode.str(opcode),
-                         str(argument) if argument is not None else ""))
+        print(
+            "%s %s"
+            % (OpCode.str(opcode), str(argument) if argument is not None else "")
+        )
 
 
 def read_macro(macro):
@@ -175,7 +177,9 @@ def read_macro(macro):
                     unary_minus_allowed = False
                     continue
 
-                while not empty() and is_op(top()) and precedence(top()) >= precedence(c):
+                while (
+                    not empty() and is_op(top()) and precedence(top()) >= precedence(c)
+                ):
                     instructions.append((token_to_opcode(pop()), None))
 
                 push(c)
@@ -211,7 +215,7 @@ def read_macro(macro):
                     found_primitive_code = True
                 else:
                     # decimal or integer disambiguation
-                    if scanner.peek() not in '.' or scanner.peek() == Token.EOF:
+                    if scanner.peek() not in "." or scanner.peek() == Token.EOF:
                         instructions.append((OpCode.PUSH, 0))
                         unary_minus_allowed = False
 
@@ -245,7 +249,8 @@ def read_macro(macro):
 
     return instructions
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import sys
 
     instructions = read_macro(sys.argv[1])

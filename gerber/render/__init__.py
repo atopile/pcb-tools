@@ -27,5 +27,5 @@ from .render import RenderSettings, GerberContext
 from .cairo_backend import GerberCairoContext
 
 available_renderers = {
-    'cairo': GerberCairoContext,
+    "cairo": GerberCairoContext,
 }
