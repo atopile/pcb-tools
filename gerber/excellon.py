@@ -482,6 +482,14 @@ class ExcellonParser(object):
             comment_stmt = CommentStmt.from_excellon(line)
             self.statements.append(comment_stmt)
 
+            # Check for aperture function comments that indicate plated/non-plated
+            if "TA.AperFunction" in comment_stmt.comment:
+                dedelimited = comment_stmt.comment.split(",")
+                if "Plated" in dedelimited:
+                    self.plated = ExcellonTool.PLATED_YES
+                elif "NonPlated" in dedelimited:
+                    self.plated = ExcellonTool.PLATED_NO
+
             # get format from altium comment
             if "FILE_FORMAT" in comment_stmt.comment:
                 detected_format = tuple(
