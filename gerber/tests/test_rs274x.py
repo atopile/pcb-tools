@@ -15,30 +15,30 @@ MULTILINE_READ_FILE = os.path.join(
 )
 
 
-def test_read():
+def test_read() -> None:
     top_copper = read(TOP_COPPER_FILE)
     assert isinstance(top_copper, GerberFile)
 
 
-def test_multiline_read():
+def test_multiline_read() -> None:
     multiline = read(MULTILINE_READ_FILE)
     assert isinstance(multiline, GerberFile)
     assert 10 == len(multiline.statements)
 
 
-def test_comments_parameter():
+def test_comments_parameter() -> None:
     top_copper = read(TOP_COPPER_FILE)
     assert top_copper.comments[0] == "This is a comment,:"
 
 
-def test_size_parameter():
+def test_size_parameter() -> None:
     top_copper = read(TOP_COPPER_FILE)
     size = top_copper.size
     pytest.approx(size[0], 2.256900, 6)
     pytest.approx(size[1], 1.500000, 6)
 
 
-def test_conversion():
+def test_conversion() -> None:
     top_copper = read(TOP_COPPER_FILE)
     assert top_copper.units == "inch"
     top_copper_inch = read(TOP_COPPER_FILE)

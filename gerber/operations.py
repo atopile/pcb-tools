@@ -83,7 +83,7 @@ def offset(cam_file, x_offset, y_offset):
     return cam_file
 
 
-def scale(cam_file, x_scale, y_scale):
+def scale(cam_file, x_scale, y_scale) -> None:
     """Scale a Cam file by a specified amount in the X and Y directions.
 
     Parameters
@@ -106,7 +106,7 @@ def scale(cam_file, x_scale, y_scale):
     pass
 
 
-def rotate(cam_file, angle):
+def rotate(cam_file, angle: float) -> None:
     """Rotate a Cam file a specified amount about the origin.
 
     Parameters

@@ -23,7 +23,7 @@ from .pcb import PCB
 from . import load_layer
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Render gerber files to image", prog="gerber-render"
     )

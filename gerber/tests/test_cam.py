@@ -8,7 +8,7 @@ import pytest
 from ..cam import CamFile, FileSettings
 
 
-def test_filesettings_defaults():
+def test_filesettings_defaults() -> None:
     """Test FileSettings default values"""
     fs = FileSettings()
     assert fs.format == (2, 5)
@@ -17,7 +17,7 @@ def test_filesettings_defaults():
     assert fs.units == "inch"
 
 
-def test_filesettings_dict():
+def test_filesettings_dict() -> None:
     """Test FileSettings Dict"""
     fs = FileSettings()
     assert fs["format"] == (2, 5)
@@ -26,7 +26,7 @@ def test_filesettings_dict():
     assert fs["units"] == "inch"
 
 
-def test_filesettings_assign():
+def test_filesettings_assign() -> None:
     """Test FileSettings attribute assignment"""
     fs = FileSettings()
     fs.units = "test1"
@@ -39,7 +39,7 @@ def test_filesettings_assign():
     assert fs.format == "test4"
 
 
-def test_filesettings_dict_assign():
+def test_filesettings_dict_assign() -> None:
     """Test FileSettings dict-style attribute assignment"""
     fs = FileSettings()
     fs["units"] = "metric"
@@ -52,23 +52,23 @@ def test_filesettings_dict_assign():
     assert fs.format == (1, 2)
 
 
-def test_camfile_init():
+def test_camfile_init() -> None:
     """Smoke test CamFile test"""
     CamFile()
 
 
-def test_camfile_settings():
+def test_camfile_settings() -> None:
     """Test CamFile Default Settings"""
     cf = CamFile()
     assert cf.settings == FileSettings()
 
 
-def test_bounds_override_smoketest():
+def test_bounds_override_smoketest() -> None:
     cf = CamFile()
     cf.bounds
 
 
-def test_zeros():
+def test_zeros() -> None:
     """Test zero/zero_suppression interaction"""
     fs = FileSettings()
     assert fs.zero_suppression == "trailing"
@@ -107,7 +107,7 @@ def test_zeros():
     assert fs.zero_suppression == "leading"
 
 
-def test_filesettings_validation():
+def test_filesettings_validation() -> None:
     """Test FileSettings constructor argument validation"""
     # absolute-ish is not a valid notation
     pytest.raises(ValueError, FileSettings, "absolute-ish", "inch", None, (2, 5), None)
@@ -132,7 +132,7 @@ def test_filesettings_validation():
     pytest.raises(ValueError, FileSettings, "absolute", "inch", None, (2, 5, 6), None)
 
 
-def test_key_validation():
+def test_key_validation() -> None:
     fs = FileSettings()
     pytest.raises(KeyError, fs.__getitem__, "octopus")
     pytest.raises(KeyError, fs.__setitem__, "octopus", "do not care")

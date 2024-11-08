@@ -14,7 +14,7 @@ from ..excellon_statements import ExcellonTool, RouteModeStmt
 NCDRILL_FILE = os.path.join(os.path.dirname(__file__), "resources/ncdrill.DRD")
 
 
-def test_format_detection():
+def test_format_detection() -> None:
     """Test file type detection"""
     with open(NCDRILL_FILE, "r", newline=None) as f:
         data = f.read()
@@ -27,12 +27,12 @@ def test_format_detection():
     assert settings["zeros"] == "trailing"
 
 
-def test_read():
+def test_read() -> None:
     ncdrill = read(NCDRILL_FILE)
     assert isinstance(ncdrill, ExcellonFile)
 
 
-def test_write():
+def test_write() -> None:
     ncdrill = read(NCDRILL_FILE)
     ncdrill.write("test.ncd")
     with open(NCDRILL_FILE, "r", newline=None) as src:
@@ -43,25 +43,25 @@ def test_write():
     os.remove("test.ncd")
 
 
-def test_read_settings():
+def test_read_settings() -> None:
     ncdrill = read(NCDRILL_FILE)
     assert ncdrill.settings["format"] == (2, 4)
     assert ncdrill.settings["zeros"] == "trailing"
 
 
-def test_bounding_box():
+def test_bounding_box() -> None:
     ncdrill = read(NCDRILL_FILE)
     xbound, ybound = ncdrill.bounding_box
     pytest.approx(xbound, (0.1300, 2.1430))
     pytest.approx(ybound, (0.3946, 1.7164))
 
 
-def test_report():
+def test_report() -> None:
     ncdrill = read(NCDRILL_FILE)
     ncdrill.report()
 
 
-def test_conversion():
+def test_conversion() -> None:
     import copy
 
     ncdrill = read(NCDRILL_FILE)
@@ -87,38 +87,38 @@ def test_conversion():
         assert m.diameter == i.diameter, "%s not equal to %s" % (m, i)
 
 
-def test_parser_hole_count():
+def test_parser_hole_count() -> None:
     settings = FileSettings(**detect_excellon_format(NCDRILL_FILE))
     p = ExcellonParser(settings)
     p.parse(NCDRILL_FILE)
     assert p.hole_count == 36
 
 
-def test_parser_hole_sizes():
+def test_parser_hole_sizes() -> None:
     settings = FileSettings(**detect_excellon_format(NCDRILL_FILE))
     p = ExcellonParser(settings)
     p.parse(NCDRILL_FILE)
     assert p.hole_sizes == [0.0236, 0.0354, 0.04, 0.126, 0.128]
 
 
-def test_parse_whitespace():
+def test_parse_whitespace() -> None:
     p = ExcellonParser(FileSettings())
     assert p._parse_line("         ") is None
 
 
-def test_parse_comment():
+def test_parse_comment() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line(";A comment")
     assert p.statements[0].comment == "A comment"
 
 
-def test_parse_format_comment():
+def test_parse_format_comment() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("; FILE_FORMAT=9:9 ")
     assert p.format == (9, 9)
 
 
-def test_parse_header():
+def test_parse_header() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("M48   ")
     assert p.state == "HEADER"
@@ -126,7 +126,7 @@ def test_parse_header():
     assert p.state == "DRILL"
 
 
-def test_parse_rout():
+def test_parse_rout() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("G00X040944Y019842")
     assert p.state == "ROUT"
@@ -134,7 +134,7 @@ def test_parse_rout():
     assert p.state == "DRILL"
 
 
-def test_parse_version():
+def test_parse_version() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("VER,1  ")
     assert p.statements[0].version == 1
@@ -142,7 +142,7 @@ def test_parse_version():
     assert p.statements[1].version == 2
 
 
-def test_parse_format():
+def test_parse_format() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("FMAT,1  ")
     assert p.statements[0].format == 1
@@ -150,7 +150,7 @@ def test_parse_format():
     assert p.statements[1].format == 2
 
 
-def test_parse_units():
+def test_parse_units() -> None:
     settings = FileSettings(units="inch", zeros="trailing")
     p = ExcellonParser(settings)
     p._parse_line(";METRIC,LZ")
@@ -161,7 +161,7 @@ def test_parse_units():
     assert p.zeros == "leading"
 
 
-def test_parse_incremental_mode():
+def test_parse_incremental_mode() -> None:
     settings = FileSettings(units="inch", zeros="trailing")
     p = ExcellonParser(settings)
     assert p.notation == "absolute"
@@ -171,7 +171,7 @@ def test_parse_incremental_mode():
     assert p.notation == "absolute"
 
 
-def test_parse_absolute_mode():
+def test_parse_absolute_mode() -> None:
     settings = FileSettings(units="inch", zeros="trailing")
     p = ExcellonParser(settings)
     assert p.notation == "absolute"
@@ -181,27 +181,27 @@ def test_parse_absolute_mode():
     assert p.notation == "absolute"
 
 
-def test_parse_repeat_hole():
+def test_parse_repeat_hole() -> None:
     p = ExcellonParser(FileSettings())
     p.active_tool = ExcellonTool(FileSettings(), number=8)
     p._parse_line("R03X1.5Y1.5")
     assert p.statements[0].count == 3
 
 
-def test_parse_incremental_position():
+def test_parse_incremental_position() -> None:
     p = ExcellonParser(FileSettings(notation="incremental"))
     p._parse_line("X01Y01")
     p._parse_line("X01Y01")
     assert p.pos == [2.0, 2.0]
 
 
-def test_parse_unknown():
+def test_parse_unknown() -> None:
     p = ExcellonParser(FileSettings())
     p._parse_line("Not A Valid Statement")
     assert p.statements[0].stmt == "Not A Valid Statement"
 
 
-def test_drill_hit_units_conversion():
+def test_drill_hit_units_conversion() -> None:
     """Test unit conversion for drill hits"""
     # Inch hit
     settings = FileSettings(units="inch")
@@ -241,7 +241,7 @@ def test_drill_hit_units_conversion():
     assert hit.position == (1.0, 1.0)
 
 
-def test_drill_hit_offset():
+def test_drill_hit_offset() -> None:
     TEST_VECTORS = [
         ((0.0, 0.0), (0.0, 1.0), (0.0, 1.0)),
         ((0.0, 0.0), (1.0, 1.0), (1.0, 1.0)),
@@ -260,7 +260,7 @@ def test_drill_hit_offset():
         assert hit.position == expected
 
 
-def test_drill_slot_units_conversion():
+def test_drill_slot_units_conversion() -> None:
     """Test unit conversion for drill hits"""
     # Inch hit
     settings = FileSettings(units="inch")
@@ -305,7 +305,7 @@ def test_drill_slot_units_conversion():
     assert hit.end == (10.0, 10.0)
 
 
-def test_drill_slot_offset():
+def test_drill_slot_offset() -> None:
     TEST_VECTORS = [
         ((0.0, 0.0), (1.0, 1.0), (0.0, 0.0), (0.0, 0.0), (1.0, 1.0)),
         ((0.0, 0.0), (1.0, 1.0), (1.0, 0.0), (1.0, 0.0), (2.0, 1.0)),
@@ -326,7 +326,7 @@ def test_drill_slot_offset():
         assert slot.end == expected_end
 
 
-def test_drill_slot_bounds():
+def test_drill_slot_bounds() -> None:
     TEST_VECTORS = [
         ((0.0, 0.0), (1.0, 1.0), 1.0, ((-0.5, 1.5), (-0.5, 1.5))),
         ((0.0, 0.0), (1.0, 1.0), 0.5, ((-0.25, 1.25), (-0.25, 1.25))),
@@ -339,7 +339,7 @@ def test_drill_slot_bounds():
         assert slot.bounding_box == expected
 
 
-def test_handling_multi_line_g00_and_g1():
+def test_handling_multi_line_g00_and_g1() -> None:
     """Route Mode statements with coordinates on separate line are handled"""
     test_data = """
 %

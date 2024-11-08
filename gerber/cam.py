@@ -21,6 +21,7 @@ CAM File
 
 This module provides common base classes for Excellon/Gerber CNC files
 """
+from typing import Optional
 
 
 class FileSettings(object):
@@ -56,13 +57,13 @@ class FileSettings(object):
 
     def __init__(
         self,
-        notation="absolute",
-        units="inch",
+        notation: str="absolute",
+        units: str="inch",
         zero_suppression=None,
         format=(2, 5),
         zeros=None,
-        angle_units="degrees",
-    ):
+        angle_units: str="degrees",
+    ) -> None:
         if notation not in ["absolute", "incremental"]:
             raise ValueError("Notation must be either absolute or incremental")
         self.notation = notation
@@ -105,7 +106,7 @@ class FileSettings(object):
         return self._zero_suppression
 
     @zero_suppression.setter
-    def zero_suppression(self, value):
+    def zero_suppression(self, value) -> None:
         self._zero_suppression = value
         self._zeros = "leading" if value == "trailing" else "trailing"
 
@@ -114,7 +115,7 @@ class FileSettings(object):
         return self._zeros
 
     @zeros.setter
-    def zeros(self, value):
+    def zeros(self, value) -> None:
 
         self._zeros = value
         self._zero_suppression = "leading" if value == "trailing" else "trailing"
@@ -135,7 +136,7 @@ class FileSettings(object):
         else:
             raise KeyError()
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         if key == "notation":
             if value not in ["absolute", "incremental"]:
                 raise ValueError(
@@ -183,7 +184,7 @@ class FileSettings(object):
             and self.angle_units == other.angle_units
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Settings: %s %s %s %s %s>" % (
             self.units,
             self.notation,
@@ -237,8 +238,8 @@ class CamFile(object):
         settings=None,
         primitives=None,
         filename=None,
-        layer_name=None,
-    ):
+        layer_name: Optional[str]=None,
+    ) -> None:
         if settings is not None:
             self.notation = settings["notation"]
             self.units = settings["units"]
@@ -271,21 +272,21 @@ class CamFile(object):
         )
 
     @property
-    def bounds(self):
+    def bounds(self) -> None:
         """File boundaries"""
         pass
 
     @property
-    def bounding_box(self):
+    def bounding_box(self) -> None:
         pass
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         pass
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         pass
 
-    def render(self, ctx=None, invert=False, filename=None):
+    def render(self, ctx=None, invert: bool=False, filename=None) -> None:
         """Generate image of layer.
 
         Parameters

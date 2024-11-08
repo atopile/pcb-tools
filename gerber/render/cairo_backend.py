@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from types import TracebackType
+from typing import Optional, Type
+
 try:
     import cairo
 except ImportError:
@@ -35,7 +38,7 @@ from io import BytesIO
 
 class GerberCairoContext(GerberContext):
 
-    def __init__(self, scale=300):
+    def __init__(self, scale: int=300) -> None:
         super(GerberCairoContext, self).__init__()
         self.scale = (scale, scale)
         self.surface = None
@@ -66,7 +69,7 @@ class GerberCairoContext(GerberContext):
             else (0.0, 0.0)
         )
 
-    def set_bounds(self, bounds, new_surface=False):
+    def set_bounds(self, bounds, new_surface: bool=False) -> None:
         origin_in_inch = (bounds[0][0], bounds[1][0])
         size_in_inch = (
             abs(bounds[0][1] - bounds[0][0]),
@@ -96,9 +99,9 @@ class GerberCairoContext(GerberContext):
         filename=None,
         settings=None,
         bgsettings=None,
-        verbose=False,
+        verbose: bool=False,
         bounds=None,
-    ):
+    ) -> None:
         if settings is None:
             settings = THEMES["default"].get(layer.layer_class, RenderSettings())
         if bgsettings is None:
@@ -125,10 +128,10 @@ class GerberCairoContext(GerberContext):
         layers,
         filename,
         theme=THEMES["default"],
-        verbose=False,
-        max_width=800,
-        max_height=600,
-    ):
+        verbose: bool=False,
+        max_width: int=800,
+        max_height: int=600,
+    ) -> None:
         """Render a set of layers"""
         # Calculate scale parameter
         x_range = [10000, -10000]
@@ -158,7 +161,7 @@ class GerberCairoContext(GerberContext):
             )
         self.dump(filename, verbose)
 
-    def dump(self, filename=None, verbose=False):
+    def dump(self, filename=None, verbose: bool=False):
         """Save image as `filename`"""
         try:
             is_svg = os.path.splitext(filename.lower())[1] == ".svg"
@@ -188,7 +191,7 @@ class GerberCairoContext(GerberContext):
         self.surface_buffer.flush()
         return self.surface_buffer.read()
 
-    def clear(self):
+    def clear(self) -> None:
         self.surface = None
         self.output_ctx = None
         self.has_bg = False
@@ -210,13 +213,13 @@ class GerberCairoContext(GerberContext):
                 msk.ctx.translate(-self.origin_in_pixels[0], -self.origin_in_pixels[1])
                 return msk
 
-            def __exit__(msk, exc_type, exc_val, traceback):
+            def __exit__(msk, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], traceback: Optional[TracebackType]) -> None:
                 if hasattr(msk.surface, "finish"):
                     msk.surface.finish()
 
         return Mask()
 
-    def _render_layer(self, layer, settings):
+    def _render_layer(self, layer, settings) -> None:
         self.invert = settings.invert
         # Get a new clean layer to render on
         self.new_render_layer(mirror=settings.mirror)
@@ -225,7 +228,7 @@ class GerberCairoContext(GerberContext):
         # Add layer to image
         self.flatten(settings.color, settings.alpha)
 
-    def _render_line(self, line, color):
+    def _render_line(self, line, color) -> None:
         start = self.scale_point(line.start)
         end = self.scale_point(line.end)
         self.ctx.set_operator(
@@ -253,7 +256,7 @@ class GerberCairoContext(GerberContext):
                     mask.ctx.fill()
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_arc(self, arc, color):
+    def _render_arc(self, arc, color) -> None:
         center = self.scale_point(arc.center)
         start = self.scale_point(arc.start)
         end = self.scale_point(arc.end)
@@ -304,7 +307,7 @@ class GerberCairoContext(GerberContext):
 
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_region(self, region, color):
+    def _render_region(self, region, color) -> None:
         self.ctx.set_operator(
             cairo.OPERATOR_OVER
             if (not self.invert) and region.level_polarity == "dark"
@@ -332,7 +335,7 @@ class GerberCairoContext(GerberContext):
                 mask.ctx.fill()
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_circle(self, circle, color):
+    def _render_circle(self, circle, color) -> None:
         center = self.scale_point(circle.position)
         self.ctx.set_operator(
             cairo.OPERATOR_OVER
@@ -409,7 +412,7 @@ class GerberCairoContext(GerberContext):
                     mask.ctx.fill()
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_rectangle(self, rectangle, color):
+    def _render_rectangle(self, rectangle, color) -> None:
         lower_left = self.scale_point(rectangle.lower_left)
         width, height = tuple(
             [
@@ -482,7 +485,7 @@ class GerberCairoContext(GerberContext):
                     mask.ctx.fill()
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_obround(self, obround, color):
+    def _render_obround(self, obround, color) -> None:
         self.ctx.set_operator(
             cairo.OPERATOR_OVER
             if (not self.invert) and obround.level_polarity == "dark"
@@ -571,7 +574,7 @@ class GerberCairoContext(GerberContext):
 
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_polygon(self, polygon, color):
+    def _render_polygon(self, polygon, color) -> None:
         self.ctx.set_operator(
             cairo.OPERATOR_OVER
             if (not self.invert) and polygon.level_polarity == "dark"
@@ -645,11 +648,11 @@ class GerberCairoContext(GerberContext):
 
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_drill(self, circle, color=None):
+    def _render_drill(self, circle, color=None) -> None:
         color = color if color is not None else self.drill_color
         self._render_circle(circle, color)
 
-    def _render_slot(self, slot, color):
+    def _render_slot(self, slot, color) -> None:
         start = map(mul, slot.start, self.scale)
         end = map(mul, slot.end, self.scale)
 
@@ -669,11 +672,11 @@ class GerberCairoContext(GerberContext):
                 mask.ctx.stroke()
                 self.ctx.mask_surface(mask.surface, self.origin_in_pixels[0])
 
-    def _render_amgroup(self, amgroup, color):
+    def _render_amgroup(self, amgroup, color) -> None:
         for primitive in amgroup.primitives:
             self.render(primitive)
 
-    def _render_test_record(self, primitive, color):
+    def _render_test_record(self, primitive, color) -> None:
         position = [
             pos + origin for pos, origin in zip(primitive.position, self.origin_in_inch)
         ]
@@ -692,7 +695,7 @@ class GerberCairoContext(GerberContext):
         self.ctx.show_text(primitive.net_name)
         self.ctx.scale(1, -1)
 
-    def new_render_layer(self, color=None, mirror=False):
+    def new_render_layer(self, color=None, mirror: bool=False) -> None:
         size_in_pixels = self.scale_point(self.size_in_inch)
         matrix = cairo.Matrix() * self._xform_matrix
         layer = cairo.SVGSurface(None, size_in_pixels[0], size_in_pixels[1])
@@ -710,7 +713,7 @@ class GerberCairoContext(GerberContext):
         self.active_layer = layer
         self.active_matrix = matrix
 
-    def flatten(self, color=None, alpha=None):
+    def flatten(self, color=None, alpha: Optional[float]=None) -> None:
         color = color if color is not None else self.color
         alpha = alpha if alpha is not None else self.alpha
         self.output_ctx.set_source_rgba(color[0], color[1], color[2], alpha)
@@ -719,7 +722,7 @@ class GerberCairoContext(GerberContext):
         self.active_layer = None
         self.active_matrix = None
 
-    def paint_background(self, settings=None):
+    def paint_background(self, settings=None) -> None:
         color = settings.color if settings is not None else self.background_color
         alpha = settings.alpha if settings is not None else 1.0
         if not self.has_bg:
@@ -744,7 +747,7 @@ class GerberCairoContext(GerberContext):
         """
 
         class Clip:
-            def __init__(clp, primitive):
+            def __init__(clp, primitive) -> None:
                 x_range, y_range = primitive.bounding_box
                 xmin, xmax = x_range
                 ymin, ymax = y_range
@@ -766,12 +769,12 @@ class GerberCairoContext(GerberContext):
                 clp.width = abs(clp.xmax - clp.xmin)
                 clp.height = abs(clp.ymax - clp.ymin)
 
-            def __enter__(clp):
+            def __enter__(clp) -> None:
                 # Clip current context to primitive's bounding box
                 self.ctx.rectangle(clp.xmin, clp.ymin, clp.width, clp.height)
                 self.ctx.clip()
 
-            def __exit__(clp, exc_type, exc_val, traceback):
+            def __exit__(clp, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], traceback: Optional[TracebackType]) -> None:
                 # Reset context clip region
                 self.ctx.reset_clip()
 

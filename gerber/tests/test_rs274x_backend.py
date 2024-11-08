@@ -9,14 +9,14 @@ from ..render.rs274x_backend import Rs274xContext
 from ..rs274x import read
 
 
-def test_render_two_boxes():
+def test_render_two_boxes() -> None:
     """Umaco exapmle of two boxes"""
     _test_render(
         "resources/example_two_square_boxes.gbr", "golden/example_two_square_boxes.gbr"
     )
 
 
-def _test_render_single_quadrant():
+def _test_render_single_quadrant() -> None:
     """Umaco exapmle of a single quadrant arc"""
 
     # TODO there is probably a bug here
@@ -25,14 +25,14 @@ def _test_render_single_quadrant():
     )
 
 
-def _test_render_simple_contour():
+def _test_render_simple_contour() -> None:
     """Umaco exapmle of a simple arrow-shaped contour"""
     _test_render(
         "resources/example_simple_contour.gbr", "golden/example_simple_contour.gbr"
     )
 
 
-def _test_render_single_contour_1():
+def _test_render_single_contour_1() -> None:
     """Umaco example of a single contour
 
     The resulting image for this test is used by other tests because they must generate the same output.
@@ -42,7 +42,7 @@ def _test_render_single_contour_1():
     )
 
 
-def _test_render_single_contour_2():
+def _test_render_single_contour_2() -> None:
     """Umaco exapmle of a single contour, alternate contour end order
 
     The resulting image for this test is used by other tests because they must generate the same output.
@@ -52,14 +52,14 @@ def _test_render_single_contour_2():
     )
 
 
-def _test_render_single_contour_3():
+def _test_render_single_contour_3() -> None:
     """Umaco exapmle of a single contour with extra line"""
     _test_render(
         "resources/example_single_contour_3.gbr", "golden/example_single_contour_3.gbr"
     )
 
 
-def _test_render_not_overlapping_contour():
+def _test_render_not_overlapping_contour() -> None:
     """Umaco example of D02 staring a second contour"""
     _test_render(
         "resources/example_not_overlapping_contour.gbr",
@@ -67,7 +67,7 @@ def _test_render_not_overlapping_contour():
     )
 
 
-def _test_render_not_overlapping_touching():
+def _test_render_not_overlapping_touching() -> None:
     """Umaco example of D02 staring a second contour"""
     _test_render(
         "resources/example_not_overlapping_touching.gbr",
@@ -75,7 +75,7 @@ def _test_render_not_overlapping_touching():
     )
 
 
-def _test_render_overlapping_touching():
+def _test_render_overlapping_touching() -> None:
     """Umaco example of D02 staring a second contour"""
     _test_render(
         "resources/example_overlapping_touching.gbr",
@@ -83,7 +83,7 @@ def _test_render_overlapping_touching():
     )
 
 
-def _test_render_overlapping_contour():
+def _test_render_overlapping_contour() -> None:
     """Umaco example of D02 staring a second contour"""
     _test_render(
         "resources/example_overlapping_contour.gbr",
@@ -91,7 +91,7 @@ def _test_render_overlapping_contour():
     )
 
 
-def _DISABLED_test_render_level_holes():
+def _DISABLED_test_render_level_holes() -> None:
     """Umaco example of using multiple levels to create multiple holes"""
 
     # TODO This is clearly rendering wrong. I'm temporarily checking this in because there are more
@@ -101,14 +101,14 @@ def _DISABLED_test_render_level_holes():
     )
 
 
-def _DISABLED_test_render_cutin():
+def _DISABLED_test_render_cutin() -> None:
     """Umaco example of using a cutin"""
 
     # TODO This is clearly rendering wrong.
     _test_render("resources/example_cutin.gbr", "golden/example_cutin.gbr")
 
 
-def _test_render_fully_coincident():
+def _test_render_fully_coincident() -> None:
     """Umaco example of coincident lines rendering two contours"""
 
     _test_render(
@@ -116,7 +116,7 @@ def _test_render_fully_coincident():
     )
 
 
-def _test_render_coincident_hole():
+def _test_render_coincident_hole() -> None:
     """Umaco example of coincident lines rendering a hole in the contour"""
 
     _test_render(
@@ -124,7 +124,7 @@ def _test_render_coincident_hole():
     )
 
 
-def _test_render_cutin_multiple():
+def _test_render_cutin_multiple() -> None:
     """Umaco example of a region with multiple cutins"""
 
     _test_render(
@@ -132,7 +132,7 @@ def _test_render_cutin_multiple():
     )
 
 
-def _test_flash_circle():
+def _test_flash_circle() -> None:
     """Umaco example a simple circular flash with and without a hole"""
 
     _test_render(
@@ -140,7 +140,7 @@ def _test_flash_circle():
     )
 
 
-def _test_flash_rectangle():
+def _test_flash_rectangle() -> None:
     """Umaco example a simple rectangular flash with and without a hole"""
 
     _test_render(
@@ -148,7 +148,7 @@ def _test_flash_rectangle():
     )
 
 
-def _test_flash_obround():
+def _test_flash_obround() -> None:
     """Umaco example a simple obround flash with and without a hole"""
 
     _test_render(
@@ -156,7 +156,7 @@ def _test_flash_obround():
     )
 
 
-def _test_flash_polygon():
+def _test_flash_polygon() -> None:
     """Umaco example a simple polygon flash with and without a hole"""
 
     _test_render(
@@ -164,7 +164,7 @@ def _test_flash_polygon():
     )
 
 
-def _test_holes_dont_clear():
+def _test_holes_dont_clear() -> None:
     """Umaco example that an aperture with a hole does not clear the area"""
 
     _test_render(
@@ -172,7 +172,7 @@ def _test_holes_dont_clear():
     )
 
 
-def _test_render_am_exposure_modifier():
+def _test_render_am_exposure_modifier() -> None:
     """Umaco example that an aperture macro with a hole does not clear the area"""
 
     _test_render(

@@ -21,6 +21,7 @@ from operator import add
 from itertools import combinations
 from .utils import validate_coordinates, inch, metric, convex_hull
 from .utils import rotate_point, nearly_equal
+from typing import Optional
 
 
 class Primitive(object):
@@ -46,7 +47,7 @@ class Primitive(object):
         Name of the electrical net the primitive belongs to
     """
 
-    def __init__(self, level_polarity="dark", rotation=0, units=None, net_name=None):
+    def __init__(self, level_polarity: str="dark", rotation: int=0, units=None, net_name: Optional[str]=None) -> None:
         self.level_polarity = level_polarity
         self.net_name = net_name
         self._to_convert = list()
@@ -72,7 +73,7 @@ class Primitive(object):
         return self._units
 
     @units.setter
-    def units(self, value):
+    def units(self, value) -> None:
         self._changed()
         self._units = value
 
@@ -81,7 +82,7 @@ class Primitive(object):
         return self._rotation
 
     @rotation.setter
-    def rotation(self, value):
+    def rotation(self, value) -> None:
         self._changed()
         self._rotation = value
         self._cos_theta = math.cos(math.radians(value))
@@ -121,7 +122,7 @@ class Primitive(object):
         """
         return self.bounding_box
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         """Convert primitive units to inches."""
         if self.units == "metric":
             self.units = "inch"
@@ -148,7 +149,7 @@ class Primitive(object):
                         if value is not None:
                             setattr(self, attr, inch(value))
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         """Convert primitive units to metric."""
         if self.units == "inch":
             self.units = "metric"
@@ -175,7 +176,7 @@ class Primitive(object):
                         if value is not None:
                             setattr(self, attr, metric(value))
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         """Move the primitive by the specified x and y offset amount.
 
         values are specified in the primitive's native units
@@ -189,10 +190,10 @@ class Primitive(object):
                 ]
             )
 
-    def to_statement(self):
+    def to_statement(self) -> None:
         pass
 
-    def _changed(self):
+    def _changed(self) -> None:
         """Clear memoized properties.
 
         Forces a recalculation next time any memoized propery is queried.
@@ -210,7 +211,7 @@ class Primitive(object):
 class Line(Primitive):
     """ """
 
-    def __init__(self, start, end, aperture, level_polarity=None, **kwargs):
+    def __init__(self, start, end, aperture, level_polarity=None, **kwargs) -> None:
         super(Line, self).__init__(**kwargs)
         self.level_polarity = level_polarity
         self._start = start
@@ -219,7 +220,7 @@ class Line(Primitive):
         self._to_convert = ["start", "end", "aperture"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return False
 
     @property
@@ -227,7 +228,7 @@ class Line(Primitive):
         return self._start
 
     @start.setter
-    def start(self, value):
+    def start(self, value) -> None:
         self._changed()
         self._start = value
 
@@ -236,7 +237,7 @@ class Line(Primitive):
         return self._end
 
     @end.setter
-    def end(self, value):
+    def end(self, value) -> None:
         self._changed()
         self._end = value
 
@@ -314,7 +315,7 @@ class Line(Primitive):
                 self._vertices = convex_hull(points)
         return self._vertices
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._changed()
         self.start = tuple(
             [coord + offset for coord, offset in zip(self.start, (x_offset, y_offset))]
@@ -323,7 +324,7 @@ class Line(Primitive):
             [coord + offset for coord, offset in zip(self.end, (x_offset, y_offset))]
         )
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int):
 
         if not isinstance(other, Line):
             return False
@@ -335,10 +336,10 @@ class Line(Primitive):
             self.end, equiv_end
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Line {} to {}>".format(self.start, self.end)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
 
@@ -355,7 +356,7 @@ class Arc(Primitive):
         quadrant_mode,
         level_polarity=None,
         **kwargs,
-    ):
+    ) -> None:
         super(Arc, self).__init__(**kwargs)
         self.level_polarity = level_polarity
         self._start = start
@@ -367,7 +368,7 @@ class Arc(Primitive):
         self._to_convert = ["start", "end", "center", "aperture"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return False
 
     @property
@@ -375,7 +376,7 @@ class Arc(Primitive):
         return self._start
 
     @start.setter
-    def start(self, value):
+    def start(self, value) -> None:
         self._changed()
         self._start = value
 
@@ -384,7 +385,7 @@ class Arc(Primitive):
         return self._end
 
     @end.setter
-    def end(self, value):
+    def end(self, value) -> None:
         self._changed()
         self._end = value
 
@@ -393,7 +394,7 @@ class Arc(Primitive):
         return self._center
 
     @center.setter
-    def center(self, value):
+    def center(self, value) -> None:
         self._changed()
         self._center = value
 
@@ -402,7 +403,7 @@ class Arc(Primitive):
         return self._quadrant_mode
 
     @quadrant_mode.setter
-    def quadrant_mode(self, quadrant_mode):
+    def quadrant_mode(self, quadrant_mode) -> None:
         self._changed()
         self._quadrant_mode = quadrant_mode
 
@@ -561,7 +562,7 @@ class Arc(Primitive):
         max_y = max(y)
         return ((min_x, max_x), (min_y, max_y))
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._changed()
         self.start = tuple(map(add, self.start, (x_offset, y_offset)))
         self.end = tuple(map(add, self.end, (x_offset, y_offset)))
@@ -576,10 +577,10 @@ class Circle(Primitive):
         position,
         diameter,
         hole_diameter=None,
-        hole_width=0,
-        hole_height=0,
+        hole_width: int=0,
+        hole_height: int=0,
         **kwargs,
-    ):
+    ) -> None:
         super(Circle, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -596,7 +597,7 @@ class Circle(Primitive):
         ]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -604,7 +605,7 @@ class Circle(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -613,7 +614,7 @@ class Circle(Primitive):
         return self._diameter
 
     @diameter.setter
-    def diameter(self, value):
+    def diameter(self, value) -> None:
         self._changed()
         self._diameter = value
 
@@ -637,10 +638,10 @@ class Circle(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self.position = tuple(map(add, self.position, (x_offset, y_offset)))
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int):
         """Is this the same as the other circle, ignoring the offiset?"""
 
         if not isinstance(other, Circle):
@@ -657,7 +658,7 @@ class Circle(Primitive):
 class Ellipse(Primitive):
     """ """
 
-    def __init__(self, position, width, height, **kwargs):
+    def __init__(self, position, width: int, height, **kwargs) -> None:
         super(Ellipse, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -666,7 +667,7 @@ class Ellipse(Primitive):
         self._to_convert = ["position", "width", "height"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -674,7 +675,7 @@ class Ellipse(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -683,7 +684,7 @@ class Ellipse(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -692,7 +693,7 @@ class Ellipse(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -734,13 +735,13 @@ class Rectangle(Primitive):
     def __init__(
         self,
         position,
-        width,
+        width: int,
         height,
-        hole_diameter=0,
-        hole_width=0,
-        hole_height=0,
+        hole_diameter: int=0,
+        hole_width: int=0,
+        hole_height: int=0,
         **kwargs,
-    ):
+    ) -> None:
         super(Rectangle, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -762,7 +763,7 @@ class Rectangle(Primitive):
         self._upper_right = None
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -770,7 +771,7 @@ class Rectangle(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -779,7 +780,7 @@ class Rectangle(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -788,7 +789,7 @@ class Rectangle(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -853,7 +854,7 @@ class Rectangle(Primitive):
     def axis_aligned_height(self):
         return self._cos_theta * self.height + self._sin_theta * self.width
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int):
         """Is this the same as the other rect, ignoring the offset?"""
 
         if not isinstance(other, Rectangle):
@@ -871,19 +872,19 @@ class Rectangle(Primitive):
 
         return nearly_equal(self.position, equiv_position)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Rectangle W {} H {} R {}>".format(
             self.width, self.height, self.rotation * 180 / math.pi
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
 class Diamond(Primitive):
     """ """
 
-    def __init__(self, position, width, height, **kwargs):
+    def __init__(self, position, width: int, height, **kwargs) -> None:
         super(Diamond, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -892,7 +893,7 @@ class Diamond(Primitive):
         self._to_convert = ["position", "width", "height"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -900,7 +901,7 @@ class Diamond(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -909,7 +910,7 @@ class Diamond(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -918,7 +919,7 @@ class Diamond(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -966,7 +967,7 @@ class Diamond(Primitive):
 class ChamferRectangle(Primitive):
     """ """
 
-    def __init__(self, position, width, height, chamfer, corners=None, **kwargs):
+    def __init__(self, position, width: int, height, chamfer, corners=None, **kwargs) -> None:
         super(ChamferRectangle, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -977,7 +978,7 @@ class ChamferRectangle(Primitive):
         self._to_convert = ["position", "width", "height", "chamfer"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -985,7 +986,7 @@ class ChamferRectangle(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -994,7 +995,7 @@ class ChamferRectangle(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -1003,7 +1004,7 @@ class ChamferRectangle(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -1012,7 +1013,7 @@ class ChamferRectangle(Primitive):
         return self._chamfer
 
     @chamfer.setter
-    def chamfer(self, value):
+    def chamfer(self, value) -> None:
         self._changed()
         self._chamfer = value
 
@@ -1021,7 +1022,7 @@ class ChamferRectangle(Primitive):
         return self._corners
 
     @corners.setter
-    def corners(self, value):
+    def corners(self, value) -> None:
         self._changed()
         self._corners = value
 
@@ -1091,7 +1092,7 @@ class ChamferRectangle(Primitive):
 class RoundRectangle(Primitive):
     """ """
 
-    def __init__(self, position, width, height, radius, corners, **kwargs):
+    def __init__(self, position, width: int, height, radius: float, corners, **kwargs) -> None:
         super(RoundRectangle, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -1102,7 +1103,7 @@ class RoundRectangle(Primitive):
         self._to_convert = ["position", "width", "height", "radius"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1110,7 +1111,7 @@ class RoundRectangle(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -1119,7 +1120,7 @@ class RoundRectangle(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -1128,7 +1129,7 @@ class RoundRectangle(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -1137,7 +1138,7 @@ class RoundRectangle(Primitive):
         return self._radius
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value) -> None:
         self._changed()
         self._radius = value
 
@@ -1146,7 +1147,7 @@ class RoundRectangle(Primitive):
         return self._corners
 
     @corners.setter
-    def corners(self, value):
+    def corners(self, value) -> None:
         self._changed()
         self._corners = value
 
@@ -1179,13 +1180,13 @@ class Obround(Primitive):
     def __init__(
         self,
         position,
-        width,
+        width: int,
         height,
-        hole_diameter=0,
-        hole_width=0,
-        hole_height=0,
+        hole_diameter: int=0,
+        hole_width: int=0,
+        hole_height: int=0,
         **kwargs,
-    ):
+    ) -> None:
         super(Obround, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -1204,7 +1205,7 @@ class Obround(Primitive):
         ]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1212,7 +1213,7 @@ class Obround(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -1221,7 +1222,7 @@ class Obround(Primitive):
         return self._width
 
     @width.setter
-    def width(self, value):
+    def width(self, value) -> None:
         self._changed()
         self._width = value
 
@@ -1230,7 +1231,7 @@ class Obround(Primitive):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value) -> None:
         self._changed()
         self._height = value
 
@@ -1302,12 +1303,12 @@ class Polygon(Primitive):
         self,
         position,
         sides,
-        radius,
-        hole_diameter=0,
-        hole_width=0,
-        hole_height=0,
+        radius: float,
+        hole_diameter: int=0,
+        hole_width: int=0,
+        hole_height: int=0,
         **kwargs,
-    ):
+    ) -> None:
         super(Polygon, self).__init__(**kwargs)
         validate_coordinates(position)
         self._position = position
@@ -1325,7 +1326,7 @@ class Polygon(Primitive):
         ]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1343,7 +1344,7 @@ class Polygon(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -1352,7 +1353,7 @@ class Polygon(Primitive):
         return self._radius
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value) -> None:
         self._changed()
         self._radius = value
 
@@ -1366,7 +1367,7 @@ class Polygon(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self.position = tuple(map(add, self.position, (x_offset, y_offset)))
 
     @property
@@ -1386,7 +1387,7 @@ class Polygon(Primitive):
             )
         return points
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int):
         """
         Is this the outline the same as the other, ignoring the position offset?
         """
@@ -1407,7 +1408,7 @@ class Polygon(Primitive):
 class AMGroup(Primitive):
     """ """
 
-    def __init__(self, amprimitives, stmt=None, **kwargs):
+    def __init__(self, amprimitives, stmt=None, **kwargs) -> None:
         """
 
         stmt : The original statment that generated this, since it is really hard to re-generate from primitives
@@ -1426,7 +1427,7 @@ class AMGroup(Primitive):
         self._to_convert = ["_position", "primitives"]
         self.stmt = stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units == "metric":
             super(AMGroup, self).to_inch()
 
@@ -1434,7 +1435,7 @@ class AMGroup(Primitive):
             if self.stmt:
                 self.stmt.to_inch()
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units == "inch":
             super(AMGroup, self).to_metric()
 
@@ -1443,7 +1444,7 @@ class AMGroup(Primitive):
                 self.stmt.to_metric()
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1462,14 +1463,14 @@ class AMGroup(Primitive):
     def position(self):
         return self._position
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._position = tuple(map(add, self._position, (x_offset, y_offset)))
 
         for primitive in self.primitives:
             primitive.offset(x_offset, y_offset)
 
     @position.setter
-    def position(self, new_pos):
+    def position(self, new_pos) -> None:
         """
         Sets the position of the AMGroup.
         This offset all of the objects by the specified distance.
@@ -1487,7 +1488,7 @@ class AMGroup(Primitive):
 
         self._position = new_pos
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int) -> bool:
         """
         Is this the macro group the same as the other, ignoring the position offset?
         """
@@ -1510,7 +1511,7 @@ class Outline(Primitive):
     They don't exist outside of AMGroup objects
     """
 
-    def __init__(self, primitives, **kwargs):
+    def __init__(self, primitives, **kwargs) -> None:
         super(Outline, self).__init__(**kwargs)
         self.primitives = primitives
         self._to_convert = ["primitives"]
@@ -1519,7 +1520,7 @@ class Outline(Primitive):
             raise ValueError("Outline must be closed")
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1535,7 +1536,7 @@ class Outline(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._changed()
         for p in self.primitives:
             p.offset(x_offset, y_offset)
@@ -1565,7 +1566,7 @@ class Outline(Primitive):
         bounding_box = self.bounding_box()
         return bounding_box[0][1] - bounding_box[0][0]
 
-    def equivalent(self, other, offset):
+    def equivalent(self, other, offset: int) -> bool:
         """
         Is this the outline the same as the other, ignoring the position offset?
         """
@@ -1584,13 +1585,13 @@ class Outline(Primitive):
 class Region(Primitive):
     """ """
 
-    def __init__(self, primitives, **kwargs):
+    def __init__(self, primitives, **kwargs) -> None:
         super(Region, self).__init__(**kwargs)
         self.primitives = primitives
         self._to_convert = ["primitives"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return False
 
     @property
@@ -1606,7 +1607,7 @@ class Region(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._changed()
         for p in self.primitives:
             p.offset(x_offset, y_offset)
@@ -1615,7 +1616,7 @@ class Region(Primitive):
 class RoundButterfly(Primitive):
     """A circle with two diagonally-opposite quadrants removed"""
 
-    def __init__(self, position, diameter, **kwargs):
+    def __init__(self, position, diameter, **kwargs) -> None:
         super(RoundButterfly, self).__init__(**kwargs)
         validate_coordinates(position)
         self.position = position
@@ -1625,7 +1626,7 @@ class RoundButterfly(Primitive):
         # TODO This does not reset bounding box correctly
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1646,7 +1647,7 @@ class RoundButterfly(Primitive):
 class SquareButterfly(Primitive):
     """A square with two diagonally-opposite quadrants removed"""
 
-    def __init__(self, position, side, **kwargs):
+    def __init__(self, position, side, **kwargs) -> None:
         super(SquareButterfly, self).__init__(**kwargs)
         validate_coordinates(position)
         self.position = position
@@ -1656,7 +1657,7 @@ class SquareButterfly(Primitive):
         # TODO This does not reset bounding box correctly
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1673,7 +1674,7 @@ class SquareButterfly(Primitive):
 class Donut(Primitive):
     """A Shape with an identical concentric shape removed from its center"""
 
-    def __init__(self, position, shape, inner_diameter, outer_diameter, **kwargs):
+    def __init__(self, position, shape, inner_diameter, outer_diameter, **kwargs) -> None:
         super(Donut, self).__init__(**kwargs)
         validate_coordinates(position)
         self.position = position
@@ -1703,7 +1704,7 @@ class Donut(Primitive):
         # TODO This does not reset bounding box correctly
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1738,7 +1739,7 @@ class Donut(Primitive):
 class SquareRoundDonut(Primitive):
     """A Square with a circular cutout in the center"""
 
-    def __init__(self, position, inner_diameter, outer_diameter, **kwargs):
+    def __init__(self, position, inner_diameter, outer_diameter, **kwargs) -> None:
         super(SquareRoundDonut, self).__init__(**kwargs)
         validate_coordinates(position)
         self.position = position
@@ -1749,7 +1750,7 @@ class SquareRoundDonut(Primitive):
         self._to_convert = ["position", "inner_diameter", "outer_diameter"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return True
 
     @property
@@ -1764,7 +1765,7 @@ class SquareRoundDonut(Primitive):
 class Drill(Primitive):
     """A drill hole"""
 
-    def __init__(self, position, diameter, **kwargs):
+    def __init__(self, position, diameter, **kwargs) -> None:
         super(Drill, self).__init__("dark", **kwargs)
         validate_coordinates(position)
         self._position = position
@@ -1772,7 +1773,7 @@ class Drill(Primitive):
         self._to_convert = ["position", "diameter"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return False
 
     @property
@@ -1780,7 +1781,7 @@ class Drill(Primitive):
         return self._position
 
     @position.setter
-    def position(self, value):
+    def position(self, value) -> None:
         self._changed()
         self._position = value
 
@@ -1789,7 +1790,7 @@ class Drill(Primitive):
         return self._diameter
 
     @diameter.setter
-    def diameter(self, value):
+    def diameter(self, value) -> None:
         self._changed()
         self._diameter = value
 
@@ -1807,11 +1808,11 @@ class Drill(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self._changed()
         self.position = tuple(map(add, self.position, (x_offset, y_offset)))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Drill %f %s (%f, %f)>" % (
             self.diameter,
             self.units,
@@ -1823,7 +1824,7 @@ class Drill(Primitive):
 class Slot(Primitive):
     """A drilled slot"""
 
-    def __init__(self, start, end, diameter, **kwargs):
+    def __init__(self, start, end, diameter, **kwargs) -> None:
         super(Slot, self).__init__("dark", **kwargs)
         validate_coordinates(start)
         validate_coordinates(end)
@@ -1833,7 +1834,7 @@ class Slot(Primitive):
         self._to_convert = ["start", "end", "diameter"]
 
     @property
-    def flashed(self):
+    def flashed(self) -> bool:
         return False
 
     @property
@@ -1847,7 +1848,7 @@ class Slot(Primitive):
             self._bounding_box = ((min_x, max_x), (min_y, max_y))
         return self._bounding_box
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self.start = tuple(map(add, self.start, (x_offset, y_offset)))
         self.end = tuple(map(add, self.end, (x_offset, y_offset)))
 
@@ -1855,7 +1856,7 @@ class Slot(Primitive):
 class TestRecord(Primitive):
     """Netlist Test record"""
 
-    def __init__(self, position, net_name, layer, **kwargs):
+    def __init__(self, position, net_name: str, layer, **kwargs) -> None:
         super(TestRecord, self).__init__(**kwargs)
         validate_coordinates(position)
         self.position = position

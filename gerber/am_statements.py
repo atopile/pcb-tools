@@ -64,7 +64,7 @@ class AMPrimitive(object):
     TypeError, ValueError
     """
 
-    def __init__(self, code, exposure=None):
+    def __init__(self, code, exposure=None) -> None:
         VALID_CODES = (0, 1, 2, 4, 5, 6, 7, 20, 21, 22, 9999)
         if not isinstance(code, int):
             raise TypeError("Aperture Macro Primitive code must be an integer")
@@ -84,12 +84,12 @@ class AMPrimitive(object):
         raise NotImplementedError("Subclass must implement `to-metric`")
 
     @property
-    def _level_polarity(self):
+    def _level_polarity(self) -> str:
         if self.exposure == "off":
             return "clear"
         return "dark"
 
-    def to_primitive(self, units):
+    def to_primitive(self, units) -> None:
         """Return a Primitive instance based on the specified macro params."""
         print("Rendering {}s is not supported yet.".format(str(self.__class__)))
 
@@ -132,19 +132,19 @@ class AMCommentPrimitive(AMPrimitive):
         comment = primitive[1:]
         return cls(code, comment)
 
-    def __init__(self, code, comment):
+    def __init__(self, code, comment: str) -> None:
         if code != 0:
             raise ValueError("Not a valid Aperture Macro Comment statement")
         super(AMCommentPrimitive, self).__init__(code)
         self.comment = comment.strip(" *")
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         pass
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         pass
 
-    def to_gerber(self, settings=None):
+    def to_gerber(self, settings=None) -> str:
         return "0 %s *" % self.comment
 
     def to_primitive(self, units):
@@ -153,7 +153,7 @@ class AMCommentPrimitive(AMPrimitive):
         """
         return None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Aperture Macro Comment: %s>" % self.comment
 
 
@@ -203,7 +203,7 @@ class AMCirclePrimitive(AMPrimitive):
     def from_primitive(cls, primitive):
         return cls(1, "on", primitive.diameter, primitive.position)
 
-    def __init__(self, code, exposure, diameter, position):
+    def __init__(self, code, exposure, diameter, position) -> None:
         validate_coordinates(position)
         if code != 1:
             raise ValueError("CirclePrimitive code is 1")
@@ -211,15 +211,15 @@ class AMCirclePrimitive(AMPrimitive):
         self.diameter = diameter
         self.position = position
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.diameter = inch(self.diameter)
         self.position = tuple([inch(x) for x in self.position])
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.diameter = metric(self.diameter)
         self.position = tuple([metric(x) for x in self.position])
 
-    def to_gerber(self, settings=None):
+    def to_gerber(self, settings=None) -> str:
         data = dict(
             code=self.code,
             exposure="1" if self.exposure == "on" else 0,
@@ -293,7 +293,7 @@ class AMVectorLinePrimitive(AMPrimitive):
         rotation = float(modifiers[7])
         return cls(code, exposure, width, start, end, rotation)
 
-    def __init__(self, code, exposure, width, start, end, rotation):
+    def __init__(self, code, exposure, width: int, start, end, rotation) -> None:
         validate_coordinates(start)
         validate_coordinates(end)
         if code not in (2, 20):
@@ -304,12 +304,12 @@ class AMVectorLinePrimitive(AMPrimitive):
         self.end = end
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.width = inch(self.width)
         self.start = tuple([inch(x) for x in self.start])
         self.end = tuple([inch(x) for x in self.end])
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.width = metric(self.width)
         self.start = tuple([metric(x) for x in self.start])
         self.end = tuple([metric(x) for x in self.end])
@@ -421,7 +421,7 @@ class AMOutlinePrimitive(AMPrimitive):
         rotation = float(modifiers[-1])
         return cls(code, exposure, start_point, points, rotation)
 
-    def __init__(self, code, exposure, start_point, points, rotation):
+    def __init__(self, code, exposure, start_point, points, rotation) -> None:
         """Initialize AMOutlinePrimitive"""
         validate_coordinates(start_point)
         for point in points:
@@ -435,15 +435,15 @@ class AMOutlinePrimitive(AMPrimitive):
         self.points = points
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.start_point = tuple([inch(x) for x in self.start_point])
         self.points = tuple([(inch(x), inch(y)) for x, y in self.points])
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.start_point = tuple([metric(x) for x in self.start_point])
         self.points = tuple([(metric(x), metric(y)) for x, y in self.points])
 
-    def to_gerber(self, settings=None):
+    def to_gerber(self, settings=None) -> str:
         data = dict(
             code=self.code,
             exposure="1" if self.exposure == "on" else "0",
@@ -543,7 +543,7 @@ class AMPolygonPrimitive(AMPrimitive):
         rotation = float(modifiers[6])
         return cls(code, exposure, vertices, position, diameter, rotation)
 
-    def __init__(self, code, exposure, vertices, position, diameter, rotation):
+    def __init__(self, code, exposure, vertices, position, diameter, rotation) -> None:
         """Initialize AMPolygonPrimitive"""
         if code != 5:
             raise ValueError("PolygonPrimitive code is 5")
@@ -556,11 +556,11 @@ class AMPolygonPrimitive(AMPrimitive):
         self.diameter = diameter
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.position = tuple([inch(x) for x in self.position])
         self.diameter = inch(self.diameter)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.position = tuple([metric(x) for x in self.position])
         self.diameter = metric(self.diameter)
 
@@ -672,7 +672,7 @@ class AMMoirePrimitive(AMPrimitive):
         crosshair_thickness,
         crosshair_length,
         rotation,
-    ):
+    ) -> None:
         """Initialize AMoirePrimitive"""
         if code != 6:
             raise ValueError("MoirePrimitive code is 6")
@@ -687,7 +687,7 @@ class AMMoirePrimitive(AMPrimitive):
         self.crosshair_length = crosshair_length
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.position = tuple([inch(x) for x in self.position])
         self.diameter = inch(self.diameter)
         self.ring_thickness = inch(self.ring_thickness)
@@ -695,7 +695,7 @@ class AMMoirePrimitive(AMPrimitive):
         self.crosshair_thickness = inch(self.crosshair_thickness)
         self.crosshair_length = inch(self.crosshair_length)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.position = tuple([metric(x) for x in self.position])
         self.diameter = metric(self.diameter)
         self.ring_thickness = metric(self.ring_thickness)
@@ -774,7 +774,7 @@ class AMThermalPrimitive(AMPrimitive):
         rotation = float(modifiers[6])
         return cls(code, position, outer_diameter, inner_diameter, gap, rotation)
 
-    def __init__(self, code, position, outer_diameter, inner_diameter, gap, rotation):
+    def __init__(self, code, position, outer_diameter, inner_diameter, gap, rotation) -> None:
         if code != 7:
             raise ValueError("ThermalPrimitive code is 7")
         super(AMThermalPrimitive, self).__init__(code, "on")
@@ -785,13 +785,13 @@ class AMThermalPrimitive(AMPrimitive):
         self.gap = gap
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.position = tuple([inch(x) for x in self.position])
         self.outer_diameter = inch(self.outer_diameter)
         self.inner_diameter = inch(self.inner_diameter)
         self.gap = inch(self.gap)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.position = tuple([metric(x) for x in self.position])
         self.outer_diameter = metric(self.outer_diameter)
         self.inner_diameter = metric(self.inner_diameter)
@@ -809,7 +809,7 @@ class AMThermalPrimitive(AMPrimitive):
         fmt = "{code},{position},{outer_diameter},{inner_diameter},{gap},{rotation}*"
         return fmt.format(**data)
 
-    def _approximate_arc_cw(self, start_angle, end_angle, radius, center):
+    def _approximate_arc_cw(self, start_angle, end_angle, radius: float, center):
         """
         Get an arc as a series of points
 
@@ -956,7 +956,7 @@ class AMCenterLinePrimitive(AMPrimitive):
         rotation = float(modifiers[6])
         return cls(code, exposure, width, height, center, rotation)
 
-    def __init__(self, code, exposure, width, height, center, rotation):
+    def __init__(self, code, exposure, width: int, height, center, rotation) -> None:
         if code != 21:
             raise ValueError("CenterLinePrimitive code is 21")
         super(AMCenterLinePrimitive, self).__init__(code, exposure)
@@ -966,12 +966,12 @@ class AMCenterLinePrimitive(AMPrimitive):
         self.center = center
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.center = tuple([inch(x) for x in self.center])
         self.width = inch(self.width)
         self.height = inch(self.height)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.center = tuple([metric(x) for x in self.center])
         self.width = metric(self.width)
         self.height = metric(self.height)
@@ -1063,7 +1063,7 @@ class AMLowerLeftLinePrimitive(AMPrimitive):
         rotation = float(modifiers[6])
         return cls(code, exposure, width, height, lower_left, rotation)
 
-    def __init__(self, code, exposure, width, height, lower_left, rotation):
+    def __init__(self, code, exposure, width: int, height, lower_left, rotation) -> None:
         if code != 22:
             raise ValueError("LowerLeftLinePrimitive code is 22")
         super(AMLowerLeftLinePrimitive, self).__init__(code, exposure)
@@ -1073,12 +1073,12 @@ class AMLowerLeftLinePrimitive(AMPrimitive):
         self.lower_left = lower_left
         self.rotation = rotation
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.lower_left = tuple([inch(x) for x in self.lower_left])
         self.width = inch(self.width)
         self.height = inch(self.height)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.lower_left = tuple([metric(x) for x in self.lower_left])
         self.width = metric(self.width)
         self.height = metric(self.height)
@@ -1101,14 +1101,14 @@ class AMUnsupportPrimitive(AMPrimitive):
     def from_gerber(cls, primitive):
         return cls(primitive)
 
-    def __init__(self, primitive):
+    def __init__(self, primitive) -> None:
         super(AMUnsupportPrimitive, self).__init__(9999)
         self.primitive = primitive
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         pass
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         pass
 
     def to_gerber(self, settings=None):

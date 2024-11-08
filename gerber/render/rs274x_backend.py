@@ -17,10 +17,10 @@ from ..primitives import AMGroup, Circle, Line, Obround, Outline, Polygon, Recta
 class AMGroupContext(object):
     """A special renderer to generate aperature macros from an AMGroup"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.statements = []
 
-    def render(self, amgroup, name):
+    def render(self, amgroup, name: str):
 
         if amgroup.stmt:
             # We know the statement it was generated from, so use that to create the AMParamStmt
@@ -63,28 +63,28 @@ class AMGroupContext(object):
 
         return macro
 
-    def _render_circle(self, circle):
+    def _render_circle(self, circle) -> None:
         self.statements.append(AMCirclePrimitive.from_primitive(circle))
 
-    def _render_rectangle(self, rectangle):
+    def _render_rectangle(self, rectangle) -> None:
         self.statements.append(AMCenterLinePrimitive.from_primitive(rectangle))
 
-    def _render_line(self, line):
+    def _render_line(self, line) -> None:
         self.statements.append(AMVectorLinePrimitive.from_primitive(line))
 
-    def _render_outline(self, outline):
+    def _render_outline(self, outline) -> None:
         self.statements.append(AMOutlinePrimitive.from_primitive(outline))
 
-    def _render_polygon(self, polygon):
+    def _render_polygon(self, polygon) -> None:
         self.statements.append(AMPolygonPrimitive.from_primitive(polygon))
 
-    def _render_thermal(self, thermal):
+    def _render_thermal(self, thermal) -> None:
         pass
 
 
 class Rs274xContext(GerberContext):
 
-    def __init__(self, settings):
+    def __init__(self, settings) -> None:
         GerberContext.__init__(self)
         self.comments = []
         self.header = []
@@ -124,7 +124,7 @@ class Rs274xContext(GerberContext):
 
         self._start_header(settings)
 
-    def _start_header(self, settings):
+    def _start_header(self, settings) -> None:
         self.header.append(FSParamStmt.from_settings(settings))
         self.header.append(MOParamStmt.from_units(settings.units))
 
@@ -134,7 +134,7 @@ class Rs274xContext(GerberContext):
             point[1] if point[1] != self._pos[1] else None,
         )
 
-    def _simplify_offset(self, point, offset):
+    def _simplify_offset(self, point, offset: int):
 
         if point[0] != offset[0]:
             xoffset = point[0] - offset[0]
@@ -152,10 +152,10 @@ class Rs274xContext(GerberContext):
     def statements(self):
         return self.comments + self.header + self.body + self.end
 
-    def set_bounds(self, bounds, *args, **kwargs):
+    def set_bounds(self, bounds, *args, **kwargs) -> None:
         pass
 
-    def paint_background(self):
+    def paint_background(self) -> None:
         pass
 
     def _select_aperture(self, aperture):
@@ -182,12 +182,12 @@ class Rs274xContext(GerberContext):
                 self.body.append(ApertureStmt(aper.d))
                 self._dcode = aper.d
 
-    def pre_render_primitive(self, primitive):
+    def pre_render_primitive(self, primitive) -> None:
 
         if hasattr(primitive, "comment"):
             self.body.append(CommentStmt(primitive.comment))
 
-    def _render_line(self, line, color, default_polarity="dark"):
+    def _render_line(self, line, color, default_polarity: str="dark") -> None:
 
         self._select_aperture(line.aperture)
 
@@ -215,7 +215,7 @@ class Rs274xContext(GerberContext):
         elif func:
             self.body.append(CoordStmt.mode(func))
 
-    def _render_arc(self, arc, color, default_polarity="dark"):
+    def _render_arc(self, arc, color, default_polarity: str="dark"):
 
         # Optionally set the quadrant mode if it has changed:
         if arc.quadrant_mode != self._quadrant_mode:
@@ -255,7 +255,7 @@ class Rs274xContext(GerberContext):
         self.body.append(CoordStmt.arc(func, end, center))
         self._pos = arc.end
 
-    def _render_region(self, region, color):
+    def _render_region(self, region, color) -> None:
 
         self._render_level_polarity(region)
 
@@ -275,13 +275,13 @@ class Rs274xContext(GerberContext):
 
         self.body.append(RegionModeStmt.off())
 
-    def _render_level_polarity(self, obj, default="dark"):
+    def _render_level_polarity(self, obj, default: str="dark") -> None:
         obj_polarity = obj.level_polarity if obj.level_polarity is not None else default
         if obj_polarity != self._level_polarity:
             self._level_polarity = obj_polarity
             self.body.append(LPParamStmt("LP", obj_polarity))
 
-    def _render_flash(self, primitive, aperture):
+    def _render_flash(self, primitive, aperture) -> None:
 
         self._render_level_polarity(primitive)
 
@@ -327,7 +327,7 @@ class Rs274xContext(GerberContext):
 
         return aper
 
-    def _render_circle(self, circle, color):
+    def _render_circle(self, circle, color) -> None:
 
         aper = self._get_circle(
             circle.diameter, circle.hole_diameter, circle.hole_width, circle.hole_height
@@ -336,7 +336,7 @@ class Rs274xContext(GerberContext):
 
     def _get_rectangle(
         self,
-        width,
+        width: int,
         height,
         hole_diameter=None,
         hole_width=None,
@@ -363,7 +363,7 @@ class Rs274xContext(GerberContext):
 
         return aper
 
-    def _render_rectangle(self, rectangle, color):
+    def _render_rectangle(self, rectangle, color) -> None:
 
         aper = self._get_rectangle(
             rectangle.width,
@@ -376,7 +376,7 @@ class Rs274xContext(GerberContext):
 
     def _get_obround(
         self,
-        width,
+        width: int,
         height,
         hole_diameter=None,
         hole_width=None,
@@ -402,7 +402,7 @@ class Rs274xContext(GerberContext):
 
         return aper
 
-    def _render_obround(self, obround, color):
+    def _render_obround(self, obround, color) -> None:
 
         aper = self._get_obround(
             obround.width,
@@ -413,7 +413,7 @@ class Rs274xContext(GerberContext):
         )
         self._render_flash(obround, aper)
 
-    def _render_polygon(self, polygon, color):
+    def _render_polygon(self, polygon, color) -> None:
 
         aper = self._get_polygon(
             polygon.radius,
@@ -427,8 +427,8 @@ class Rs274xContext(GerberContext):
 
     def _get_polygon(
         self,
-        radius,
-        num_vertices,
+        radius: float,
+        num_vertices: int,
         rotation,
         hole_diameter=None,
         hole_width=None,
@@ -555,19 +555,19 @@ class Rs274xContext(GerberContext):
 
         return macro[0]
 
-    def _render_amgroup(self, amgroup, color):
+    def _render_amgroup(self, amgroup, color) -> None:
 
         aper = self._get_amacro(amgroup)
         self._render_flash(amgroup, aper)
 
-    def _render_inverted_layer(self):
+    def _render_inverted_layer(self) -> None:
         pass
 
-    def new_render_layer(self):
+    def new_render_layer(self) -> None:
         # TODO Might need to implement this
         pass
 
-    def flatten(self):
+    def flatten(self) -> None:
         # TODO Might need to implement this
         pass
 

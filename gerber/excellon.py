@@ -96,16 +96,16 @@ class DrillHit(object):
 
     """
 
-    def __init__(self, tool, position):
+    def __init__(self, tool, position) -> None:
         self.tool = tool
         self.position = position
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.tool.settings.units == "metric":
             self.tool.to_inch()
             self.position = tuple(map(inch, self.position))
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.tool.settings.units == "inch":
             self.tool.to_metric()
             self.position = tuple(map(metric, self.position))
@@ -121,10 +121,10 @@ class DrillHit(object):
         max_y = position[1] + radius
         return ((min_x, max_x), (min_y, max_y))
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self.position = tuple(map(operator.add, self.position, (x_offset, y_offset)))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Hit (%f, %f) {%s}" % (self.position[0], self.position[1], self.tool)
 
 
@@ -136,19 +136,19 @@ class DrillSlot(object):
     TYPE_ROUT = 1
     TYPE_G85 = 2
 
-    def __init__(self, tool, start, end, slot_type):
+    def __init__(self, tool, start, end, slot_type) -> None:
         self.tool = tool
         self.start = start
         self.end = end
         self.slot_type = slot_type
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.tool.settings.units == "metric":
             self.tool.to_inch()
             self.start = tuple(map(inch, self.start))
             self.end = tuple(map(inch, self.end))
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.tool.settings.units == "inch":
             self.tool.to_metric()
             self.start = tuple(map(metric, self.start))
@@ -165,7 +165,7 @@ class DrillSlot(object):
         max_y = max(start[1], end[1]) + radius
         return ((min_x, max_x), (min_y, max_y))
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         self.start = tuple(map(operator.add, self.start, (x_offset, y_offset)))
         self.end = tuple(map(operator.add, self.end, (x_offset, y_offset)))
 
@@ -199,7 +199,7 @@ class ExcellonFile(CamFile):
 
     """
 
-    def __init__(self, statements, tools, hits, settings, filename=None):
+    def __init__(self, statements, tools, hits, settings, filename=None) -> None:
         super(ExcellonFile, self).__init__(
             statements=statements, settings=settings, filename=filename
         )
@@ -280,7 +280,7 @@ class ExcellonFile(CamFile):
                 f.write(rprt)
         return rprt
 
-    def write(self, filename=None):
+    def write(self, filename=None) -> None:
         filename = filename if filename is not None else self.filename
         with open(filename, "w") as f:
 
@@ -304,7 +304,7 @@ class ExcellonFile(CamFile):
                         )
             f.write(EndOfProgramStmt().to_excellon() + "\n")
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         """
         Convert units to inches
         """
@@ -319,7 +319,7 @@ class ExcellonFile(CamFile):
             #    hit.to_inch()
             self.units = "inch"
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         """Convert units to metric"""
         if self.units != "metric":
             for statement in self.statements:
@@ -334,7 +334,7 @@ class ExcellonFile(CamFile):
                 hit.to_metric()
             self.units = "metric"
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         for statement in self.statements:
             statement.offset(x_offset, y_offset)
         for primitive in self.primitives:
@@ -370,7 +370,7 @@ class ExcellonFile(CamFile):
         else:
             return counts.get(tool_number)
 
-    def update_tool(self, tool_number, **kwargs):
+    def update_tool(self, tool_number, **kwargs) -> None:
         """Change parameters of a tool"""
         if kwargs.get("feed_rate") is not None:
             self.tools[tool_number].feed_rate = kwargs.get("feed_rate")
@@ -400,7 +400,7 @@ class ExcellonParser(object):
         Excellon file settings to use when interpreting the excellon file.
     """
 
-    def __init__(self, settings=None, ext_tools=None):
+    def __init__(self, settings=None, ext_tools=None) -> None:
         self.notation = "absolute"
         self.units = "inch"
         self.zeros = "leading"
@@ -811,7 +811,7 @@ class ExcellonParser(object):
             notation=self.notation,
         )
 
-    def _add_comment_tool(self, tool):
+    def _add_comment_tool(self, tool) -> None:
         """
         Add a tool that was defined in the comments to this file.
 
@@ -825,7 +825,7 @@ class ExcellonParser(object):
 
         self.comment_tools[tool.number] = tool
 
-    def _merge_properties(self, tool):
+    def _merge_properties(self, tool) -> None:
         """
         When we have externally defined tools, merge the properties of that tool into this one
 
@@ -964,7 +964,7 @@ def detect_excellon_format(data=None, filename=None):
                 return {"format": key[0], "zeros": key[1]}
 
 
-def _layer_size_score(size, hole_count, hole_area):
+def _layer_size_score(size: int, hole_count, hole_area):
     """Heuristic used for determining the correct file number interpretation.
     Lower is better.
     """

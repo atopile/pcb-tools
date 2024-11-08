@@ -17,6 +17,7 @@
 
 
 from .render import RenderSettings
+from typing import Optional
 
 COLORS = {
     "black": (0.0, 0.0, 0.0),
@@ -50,7 +51,7 @@ SPECTRUM = [
 
 class Theme(object):
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name: Optional[str]=None, **kwargs) -> None:
         self.name = "Default" if name is None else name
         self.background = kwargs.get("background", RenderSettings(COLORS["fr-4"]))
         self.topsilk = kwargs.get("topsilk", RenderSettings(COLORS["white"]))

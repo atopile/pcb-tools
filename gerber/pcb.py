@@ -21,12 +21,13 @@ from .exceptions import ParseError
 from .layers import PCBLayer, sort_layers, layer_signatures
 from .common import read as gerber_read
 from .utils import listdir
+from typing import Optional
 
 
 class PCB(object):
 
     @classmethod
-    def from_directory(cls, directory, board_name=None, verbose=False):
+    def from_directory(cls, directory, board_name: Optional[str]=None, verbose: bool=False):
         layers = []
         names = set()
 
@@ -69,11 +70,11 @@ class PCB(object):
         # Return PCB
         return cls(layers, board_name)
 
-    def __init__(self, layers, name=None):
+    def __init__(self, layers, name: Optional[str]=None) -> None:
         self.layers = sort_layers(layers)
         self.name = name
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.layers)
 
     @property

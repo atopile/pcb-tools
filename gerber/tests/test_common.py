@@ -14,7 +14,7 @@ NCDRILL_FILE = os.path.join(os.path.dirname(__file__), "resources/ncdrill.DRD")
 TOP_COPPER_FILE = os.path.join(os.path.dirname(__file__), "resources/top_copper.GTL")
 
 
-def test_file_type_detection():
+def test_file_type_detection() -> None:
     """Test file type detection"""
     ncdrill = read(NCDRILL_FILE)
     top_copper = read(TOP_COPPER_FILE)
@@ -22,7 +22,7 @@ def test_file_type_detection():
     assert isinstance(top_copper, GerberFile)
 
 
-def test_load_from_string():
+def test_load_from_string() -> None:
     with open(NCDRILL_FILE, "r", newline=None) as f:
         ncdrill = loads(f.read())
     with open(TOP_COPPER_FILE, "r", newline=None) as f:
@@ -31,6 +31,6 @@ def test_load_from_string():
     assert isinstance(top_copper, GerberFile)
 
 
-def test_file_type_validation():
+def test_file_type_validation() -> None:
     """Test file format validation"""
     pytest.raises(ParseError, read, __file__)

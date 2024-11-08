@@ -47,13 +47,13 @@ def loads(data):
     return ExcellonSettingsParser().parse_raw(data)
 
 
-def map_coordinates(value):
+def map_coordinates(value) -> str:
     if value == "ABSOLUTE":
         return "absolute"
     return "relative"
 
 
-def map_units(value):
+def map_units(value) -> str:
     if value == "ENGLISH":
         return "inch"
     return "metric"
@@ -79,7 +79,7 @@ class ExcellonSettingsParser(object):
     None
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.values = {}
         self.settings = None
 
@@ -96,7 +96,7 @@ class ExcellonSettingsParser(object):
 
         return self.settings
 
-    def _parse(self, line):
+    def _parse(self, line) -> None:
 
         line_items = line.split()
         if len(line_items) == 2:

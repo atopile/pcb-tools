@@ -30,7 +30,7 @@ class OpCode:
     PRIM = 8
 
     @staticmethod
-    def str(opcode):
+    def str(opcode) -> str:
         if opcode == OpCode.PUSH:
             return "OPCODE_PUSH"
         elif opcode == OpCode.LOAD:
@@ -65,7 +65,7 @@ def eval_macro(instructions, parameters={}):
     def pop():
         return stack.pop()
 
-    def push(op):
+    def push(op) -> None:
         stack.append(op)
 
     def top():

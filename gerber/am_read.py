@@ -49,7 +49,7 @@ def token_to_opcode(token):
         return None
 
 
-def precedence(token):
+def precedence(token) -> int:
     if token == Token.ADD or token == Token.SUB:
         return 1
     elif token in Token.MULT or token == Token.DIV:
@@ -58,13 +58,13 @@ def precedence(token):
         return 0
 
 
-def is_op(token):
+def is_op(token) -> bool:
     return token in Token.OPERATORS
 
 
 class Scanner:
 
-    def __init__(self, s):
+    def __init__(self, s) -> None:
         self.buff = s
         self.n = 0
 
@@ -77,7 +77,7 @@ class Scanner:
 
         return Token.EOF
 
-    def ungetc(self):
+    def ungetc(self) -> None:
         if self.n > 0:
             self.n -= 1
 
@@ -104,14 +104,14 @@ class Scanner:
             return 0
         return float(n)
 
-    def readstr(self, end="*"):
+    def readstr(self, end: str="*"):
         s = ""
         while not self.eof() and self.peek() != end:
             s += self.getc()
         return s.strip()
 
 
-def print_instructions(instructions):
+def print_instructions(instructions) -> None:
     for opcode, argument in instructions:
         print(
             "%s %s"
@@ -149,7 +149,7 @@ def read_macro(macro):
         def pop():
             return op_stack.pop()
 
-        def push(op):
+        def push(op) -> None:
             op_stack.append(op)
 
         def top():

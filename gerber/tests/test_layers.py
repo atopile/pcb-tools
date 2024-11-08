@@ -26,7 +26,7 @@ NETLIST_FILE = os.path.join(os.path.dirname(__file__), "resources/ipc-d-356.ipc"
 COPPER_FILE = os.path.join(os.path.dirname(__file__), "resources/top_copper.GTL")
 
 
-def test_guess_layer_class():
+def test_guess_layer_class() -> None:
     """Test layer type inferred correctly from filename"""
 
     # Add any specific test cases here (filename, layer_class)
@@ -48,7 +48,7 @@ def test_guess_layer_class():
         assert layer_class == guess_layer_class(filename)
 
 
-def test_guess_layer_class_regex():
+def test_guess_layer_class_regex() -> None:
     """Test regular expressions for layer matching"""
 
     # Add any specific test case (filename, layer_class)
@@ -70,7 +70,7 @@ def test_guess_layer_class_regex():
         assert layer_class == guess_layer_class(filename)
 
 
-def test_guess_layer_class_by_content():
+def test_guess_layer_class_by_content() -> None:
     """Test layer class by checking content"""
 
     expected_layer_class = "bottom"
@@ -92,7 +92,7 @@ def test_guess_layer_class_by_content():
     assert expected_layer_class == guess_layer_class_by_content(filename)
 
 
-def test_sort_layers():
+def test_sort_layers() -> None:
     """Test layer ordering"""
     layers = [
         PCBLayer(layer_class="drawing"),
@@ -128,7 +128,7 @@ def test_sort_layers():
     assert [l.layer_class for l in sort_layers(layers, from_top=False)] == bottom_order
 
 
-def test_PCBLayer_from_file():
+def test_PCBLayer_from_file() -> None:
     layer = PCBLayer.from_cam(read(COPPER_FILE))
     assert isinstance(layer, PCBLayer)
     layer = PCBLayer.from_cam(read(NCDRILL_FILE))
@@ -138,13 +138,13 @@ def test_PCBLayer_from_file():
     assert layer.layer_class == "ipc_netlist"
 
 
-def test_PCBLayer_bounds():
+def test_PCBLayer_bounds() -> None:
     source = read(COPPER_FILE)
     layer = PCBLayer.from_cam(source)
     assert source.bounds == layer.bounds
 
 
-def test_DrillLayer_from_cam():
+def test_DrillLayer_from_cam() -> None:
     no_exceptions = True
     try:
         layer = DrillLayer.from_cam(read(NCDRILL_FILE))

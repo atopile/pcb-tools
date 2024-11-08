@@ -7,7 +7,7 @@ import pytest
 from ..primitives import *
 
 
-def test_primitive_smoketest():
+def test_primitive_smoketest() -> None:
     p = Primitive()
     try:
         p.bounding_box
@@ -25,7 +25,7 @@ def test_primitive_smoketest():
     #    pass
 
 
-def test_line_angle():
+def test_line_angle() -> None:
     """Test Line primitive angle calculation"""
     cases = [
         ((0, 0), (1, 0), math.radians(0)),
@@ -43,7 +43,7 @@ def test_line_angle():
         pytest.approx(line_angle, expected)
 
 
-def test_line_bounds():
+def test_line_bounds() -> None:
     """Test Line primitive bounding box calculation"""
     cases = [
         ((0, 0), (1, 1), ((-1, 2), (-1, 2))),
@@ -71,7 +71,7 @@ def test_line_bounds():
         assert l.bounding_box == expected
 
 
-def test_line_vertices():
+def test_line_vertices() -> None:
     c = Circle((0, 0), 2)
     l = Line((0, 0), (1, 1), c)
     assert l.vertices is None
@@ -95,7 +95,7 @@ def test_line_vertices():
         assert set(vertices) == set(l.vertices)
 
 
-def test_line_conversion():
+def test_line_conversion() -> None:
     c = Circle((0, 0), 25.4, units="metric")
     l = Line((2.54, 25.4), (254.0, 2540.0), c, units="metric")
 
@@ -153,7 +153,7 @@ def test_line_conversion():
     assert l.aperture.height == 254.0
 
 
-def test_line_offset():
+def test_line_offset() -> None:
     c = Circle((0, 0), 1)
     l = Line((0, 0), (1, 1), c)
     l.offset(1, 0)
@@ -164,7 +164,7 @@ def test_line_offset():
     assert l.end == (2.0, 2.0)
 
 
-def test_arc_radius():
+def test_arc_radius() -> None:
     """Test Arc primitive radius calculation"""
     cases = [((-3, 4), (5, 0), (0, 0), 5), ((0, 1), (1, 0), (0, 0), 1)]
 
@@ -173,7 +173,7 @@ def test_arc_radius():
         assert a.radius == radius
 
 
-def test_arc_sweep_angle():
+def test_arc_sweep_angle() -> None:
     """Test Arc primitive sweep angle calculation"""
     cases = [
         ((1, 0), (0, 1), (0, 0), "counterclockwise", math.radians(90)),
@@ -188,7 +188,7 @@ def test_arc_sweep_angle():
         assert a.sweep_angle == sweep
 
 
-def test_arc_bounds():
+def test_arc_bounds() -> None:
     """Test Arc primitive bounding box calculation"""
     cases = [
         ((1, 0), (0, 1), (0, 0), "clockwise", ((-1.5, 1.5), (-1.5, 1.5))),
@@ -209,7 +209,7 @@ def test_arc_bounds():
         assert a.bounding_box == bounds
 
 
-def test_arc_bounds_no_aperture():
+def test_arc_bounds_no_aperture() -> None:
     """Test Arc primitive bounding box calculation ignoring aperture"""
     cases = [
         ((1, 0), (0, 1), (0, 0), "clockwise", ((-1.0, 1.0), (-1.0, 1.0))),
@@ -230,7 +230,7 @@ def test_arc_bounds_no_aperture():
         assert a.bounding_box_no_aperture == bounds
 
 
-def test_arc_conversion():
+def test_arc_conversion() -> None:
     c = Circle((0, 0), 25.4, units="metric")
     a = Arc(
         (2.54, 25.4),
@@ -279,7 +279,7 @@ def test_arc_conversion():
     assert a.aperture.diameter == 25.4
 
 
-def test_arc_offset():
+def test_arc_offset() -> None:
     c = Circle((0, 0), 1)
     a = Arc((0, 0), (1, 1), (2, 2), "clockwise", c, "single-quadrant")
     a.offset(1, 0)
@@ -292,25 +292,25 @@ def test_arc_offset():
     assert a.center == (3.0, 3.0)
 
 
-def test_circle_radius():
+def test_circle_radius() -> None:
     """Test Circle primitive radius calculation"""
     c = Circle((1, 1), 2)
     assert c.radius == 1
 
 
-def test_circle_hole_radius():
+def test_circle_hole_radius() -> None:
     """Test Circle primitive hole radius calculation"""
     c = Circle((1, 1), 4, 2)
     assert c.hole_radius == 1
 
 
-def test_circle_bounds():
+def test_circle_bounds() -> None:
     """Test Circle bounding box calculation"""
     c = Circle((1, 1), 2)
     assert c.bounding_box == ((0, 2), (0, 2))
 
 
-def test_circle_conversion():
+def test_circle_conversion() -> None:
     """Circle conversion of units"""
     # Circle initially metric, no hole
     c = Circle((2.54, 25.4), 254.0, units="metric")
@@ -388,7 +388,7 @@ def test_circle_conversion():
     assert c.hole_diameter == 127.0
 
 
-def test_circle_offset():
+def test_circle_offset() -> None:
     c = Circle((0, 0), 1)
     c.offset(1, 0)
     assert c.position == (1.0, 0.0)
@@ -396,7 +396,7 @@ def test_circle_offset():
     assert c.position == (1.0, 1.0)
 
 
-def test_ellipse_ctor():
+def test_ellipse_ctor() -> None:
     """Test ellipse creation"""
     e = Ellipse((2, 2), 3, 2)
     assert e.position == (2, 2)
@@ -404,7 +404,7 @@ def test_ellipse_ctor():
     assert e.height == 2
 
 
-def test_ellipse_bounds():
+def test_ellipse_bounds() -> None:
     """Test ellipse bounding box calculation"""
     e = Ellipse((2, 2), 4, 2)
     assert e.bounding_box == ((0, 4), (1, 3))
@@ -416,7 +416,7 @@ def test_ellipse_bounds():
     assert e.bounding_box == ((1, 3), (0, 4))
 
 
-def test_ellipse_conversion():
+def test_ellipse_conversion() -> None:
     e = Ellipse((2.54, 25.4), 254.0, 2540.0, units="metric")
 
     # No effect
@@ -456,7 +456,7 @@ def test_ellipse_conversion():
     assert e.height == 2540.0
 
 
-def test_ellipse_offset():
+def test_ellipse_offset() -> None:
     e = Ellipse((0, 0), 1, 2)
     e.offset(1, 0)
     assert e.position == (1.0, 0.0)
@@ -464,7 +464,7 @@ def test_ellipse_offset():
     assert e.position == (1.0, 1.0)
 
 
-def test_rectangle_ctor():
+def test_rectangle_ctor() -> None:
     """Test rectangle creation"""
     test_cases = (((0, 0), 1, 1), ((0, 0), 1, 2), ((1, 1), 1, 2))
     for pos, width, height in test_cases:
@@ -474,7 +474,7 @@ def test_rectangle_ctor():
         assert r.height == height
 
 
-def test_rectangle_hole_radius():
+def test_rectangle_hole_radius() -> None:
     """Test rectangle hole diameter calculation"""
     r = Rectangle((0, 0), 2, 2)
     assert 0 == r.hole_radius
@@ -483,7 +483,7 @@ def test_rectangle_hole_radius():
     assert 0.5 == r.hole_radius
 
 
-def test_rectangle_bounds():
+def test_rectangle_bounds() -> None:
     """Test rectangle bounding box calculation"""
     r = Rectangle((0, 0), 2, 2)
     xbounds, ybounds = r.bounding_box
@@ -495,7 +495,7 @@ def test_rectangle_bounds():
     pytest.approx(ybounds, (-math.sqrt(2), math.sqrt(2)))
 
 
-def test_rectangle_vertices():
+def test_rectangle_vertices() -> None:
     sqrt2 = math.sqrt(2.0)
     TEST_VECTORS = [
         ((0, 0), 2.0, 2.0, 0.0, ((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))),
@@ -524,7 +524,7 @@ def test_rectangle_vertices():
         pytest.approx(test, expect)
 
 
-def test_rectangle_segments():
+def test_rectangle_segments() -> None:
 
     r = Rectangle((0, 0), 2.0, 2.0)
     expected = [vtx for segment in r.segments for vtx in segment]
@@ -532,7 +532,7 @@ def test_rectangle_segments():
         assert vertex in expected
 
 
-def test_rectangle_conversion():
+def test_rectangle_conversion() -> None:
     """Test converting rectangles between units"""
 
     # Initially metric no hole
@@ -612,7 +612,7 @@ def test_rectangle_conversion():
     assert r.hole_diameter == 127.0
 
 
-def test_rectangle_offset():
+def test_rectangle_offset() -> None:
     r = Rectangle((0, 0), 1, 2)
     r.offset(1, 0)
     assert r.position == (1.0, 0.0)
@@ -620,7 +620,7 @@ def test_rectangle_offset():
     assert r.position == (1.0, 1.0)
 
 
-def test_diamond_ctor():
+def test_diamond_ctor() -> None:
     """Test diamond creation"""
     test_cases = (((0, 0), 1, 1), ((0, 0), 1, 2), ((1, 1), 1, 2))
     for pos, width, height in test_cases:
@@ -630,7 +630,7 @@ def test_diamond_ctor():
         assert d.height == height
 
 
-def test_diamond_bounds():
+def test_diamond_bounds() -> None:
     """Test diamond bounding box calculation"""
     d = Diamond((0, 0), 2, 2)
     xbounds, ybounds = d.bounding_box
@@ -642,7 +642,7 @@ def test_diamond_bounds():
     pytest.approx(ybounds, (-1, 1))
 
 
-def test_diamond_conversion():
+def test_diamond_conversion() -> None:
     d = Diamond((2.54, 25.4), 254.0, 2540.0, units="metric")
 
     d.to_metric()
@@ -678,7 +678,7 @@ def test_diamond_conversion():
     assert d.height == 2540.0
 
 
-def test_diamond_offset():
+def test_diamond_offset() -> None:
     d = Diamond((0, 0), 1, 2)
     d.offset(1, 0)
     assert d.position == (1.0, 0.0)
@@ -686,7 +686,7 @@ def test_diamond_offset():
     assert d.position == (1.0, 1.0)
 
 
-def test_chamfer_rectangle_ctor():
+def test_chamfer_rectangle_ctor() -> None:
     """Test chamfer rectangle creation"""
     test_cases = (
         ((0, 0), 1, 1, 0.2, (True, True, False, False)),
@@ -702,7 +702,7 @@ def test_chamfer_rectangle_ctor():
         pytest.approx(r.corners, corners)
 
 
-def test_chamfer_rectangle_bounds():
+def test_chamfer_rectangle_bounds() -> None:
     """Test chamfer rectangle bounding box calculation"""
     r = ChamferRectangle((0, 0), 2, 2, 0.2, (True, True, False, False))
     xbounds, ybounds = r.bounding_box
@@ -714,7 +714,7 @@ def test_chamfer_rectangle_bounds():
     pytest.approx(ybounds, (-math.sqrt(2), math.sqrt(2)))
 
 
-def test_chamfer_rectangle_conversion():
+def test_chamfer_rectangle_conversion() -> None:
     r = ChamferRectangle(
         (2.54, 25.4), 254.0, 2540.0, 0.254, (True, True, False, False), units="metric"
     )
@@ -759,7 +759,7 @@ def test_chamfer_rectangle_conversion():
     assert r.chamfer == 0.254
 
 
-def test_chamfer_rectangle_offset():
+def test_chamfer_rectangle_offset() -> None:
     r = ChamferRectangle((0, 0), 1, 2, 0.01, (True, True, False, False))
     r.offset(1, 0)
     assert r.position == (1.0, 0.0)
@@ -767,7 +767,7 @@ def test_chamfer_rectangle_offset():
     assert r.position == (1.0, 1.0)
 
 
-def test_chamfer_rectangle_vertices():
+def test_chamfer_rectangle_vertices() -> None:
     TEST_VECTORS = [
         (
             1.0,
@@ -809,7 +809,7 @@ def test_chamfer_rectangle_vertices():
         assert set(r.vertices) == set(expected)
 
 
-def test_round_rectangle_ctor():
+def test_round_rectangle_ctor() -> None:
     """Test round rectangle creation"""
     test_cases = (
         ((0, 0), 1, 1, 0.2, (True, True, False, False)),
@@ -825,7 +825,7 @@ def test_round_rectangle_ctor():
         pytest.approx(r.corners, corners)
 
 
-def test_round_rectangle_bounds():
+def test_round_rectangle_bounds() -> None:
     """Test round rectangle bounding box calculation"""
     r = RoundRectangle((0, 0), 2, 2, 0.2, (True, True, False, False))
     xbounds, ybounds = r.bounding_box
@@ -837,7 +837,7 @@ def test_round_rectangle_bounds():
     pytest.approx(ybounds, (-math.sqrt(2), math.sqrt(2)))
 
 
-def test_round_rectangle_conversion():
+def test_round_rectangle_conversion() -> None:
     r = RoundRectangle(
         (2.54, 25.4), 254.0, 2540.0, 0.254, (True, True, False, False), units="metric"
     )
@@ -883,7 +883,7 @@ def test_round_rectangle_conversion():
     assert r.radius == 0.254
 
 
-def test_round_rectangle_offset():
+def test_round_rectangle_offset() -> None:
     r = RoundRectangle((0, 0), 1, 2, 0.01, (True, True, False, False))
     r.offset(1, 0)
     assert r.position == (1.0, 0.0)
@@ -891,7 +891,7 @@ def test_round_rectangle_offset():
     assert r.position == (1.0, 1.0)
 
 
-def test_obround_ctor():
+def test_obround_ctor() -> None:
     """Test obround creation"""
     test_cases = (((0, 0), 1, 1), ((0, 0), 1, 2), ((1, 1), 1, 2))
     for pos, width, height in test_cases:
@@ -901,7 +901,7 @@ def test_obround_ctor():
         assert o.height == height
 
 
-def test_obround_bounds():
+def test_obround_bounds() -> None:
     """Test obround bounding box calculation"""
     o = Obround((2, 2), 2, 4)
     xbounds, ybounds = o.bounding_box
@@ -913,14 +913,14 @@ def test_obround_bounds():
     pytest.approx(ybounds, (1, 3))
 
 
-def test_obround_orientation():
+def test_obround_orientation() -> None:
     o = Obround((0, 0), 2, 1)
     assert o.orientation == "horizontal"
     o = Obround((0, 0), 1, 2)
     assert o.orientation == "vertical"
 
 
-def test_obround_subshapes():
+def test_obround_subshapes() -> None:
     o = Obround((0, 0), 1, 4)
     ss = o.subshapes
     pytest.approx(ss["rectangle"].position, (0, 0))
@@ -933,7 +933,7 @@ def test_obround_subshapes():
     pytest.approx(ss["circle2"].position, (-1.5, 0))
 
 
-def test_obround_conversion():
+def test_obround_conversion() -> None:
     o = Obround((2.54, 25.4), 254.0, 2540.0, units="metric")
 
     # No effect
@@ -973,7 +973,7 @@ def test_obround_conversion():
     assert o.height == 2540.0
 
 
-def test_obround_offset():
+def test_obround_offset() -> None:
     o = Obround((0, 0), 1, 2)
     o.offset(1, 0)
     assert o.position == (1.0, 0.0)
@@ -981,7 +981,7 @@ def test_obround_offset():
     assert o.position == (1.0, 1.0)
 
 
-def test_polygon_ctor():
+def test_polygon_ctor() -> None:
     """Test polygon creation"""
     test_cases = (((0, 0), 3, 5, 0), ((0, 0), 5, 6, 0), ((1, 1), 7, 7, 45))
     for pos, sides, radius, hole_diameter in test_cases:
@@ -992,7 +992,7 @@ def test_polygon_ctor():
         assert p.hole_diameter == hole_diameter
 
 
-def test_polygon_bounds():
+def test_polygon_bounds() -> None:
     """Test polygon bounding box calculation"""
     p = Polygon((2, 2), 3, 2, 0)
     xbounds, ybounds = p.bounding_box
@@ -1004,7 +1004,7 @@ def test_polygon_bounds():
     pytest.approx(ybounds, (-2, 6))
 
 
-def test_polygon_conversion():
+def test_polygon_conversion() -> None:
     p = Polygon((2.54, 25.4), 3, 254.0, 0, units="metric")
 
     # No effect
@@ -1038,7 +1038,7 @@ def test_polygon_conversion():
     assert p.radius == 254.0
 
 
-def test_polygon_offset():
+def test_polygon_offset() -> None:
     p = Polygon((0, 0), 5, 10, 0)
     p.offset(1, 0)
     assert p.position == (1.0, 0.0)
@@ -1046,7 +1046,7 @@ def test_polygon_offset():
     assert p.position == (1.0, 1.0)
 
 
-def test_region_ctor():
+def test_region_ctor() -> None:
     """Test Region creation"""
     apt = Circle((0, 0), 0)
     lines = (
@@ -1060,7 +1060,7 @@ def test_region_ctor():
         assert r.primitives[i] == p
 
 
-def test_region_bounds():
+def test_region_bounds() -> None:
     """Test region bounding box calculation"""
     apt = Circle((0, 0), 0)
     lines = (
@@ -1075,7 +1075,7 @@ def test_region_bounds():
     pytest.approx(ybounds, (0, 1))
 
 
-def test_region_offset():
+def test_region_offset() -> None:
     apt = Circle((0, 0), 0)
     lines = (
         Line((0, 0), (1, 0), apt),
@@ -1091,7 +1091,7 @@ def test_region_offset():
     pytest.approx(new_ylim, tuple([y + 1 for y in ylim]))
 
 
-def test_round_butterfly_ctor():
+def test_round_butterfly_ctor() -> None:
     """Test round butterfly creation"""
     test_cases = (((0, 0), 3), ((0, 0), 5), ((1, 1), 7))
     for pos, diameter in test_cases:
@@ -1101,13 +1101,13 @@ def test_round_butterfly_ctor():
         assert b.radius == diameter / 2.0
 
 
-def test_round_butterfly_ctor_validation():
+def test_round_butterfly_ctor_validation() -> None:
     """Test RoundButterfly argument validation"""
     pytest.raises(TypeError, RoundButterfly, 3, 5)
     pytest.raises(TypeError, RoundButterfly, (3, 4, 5), 5)
 
 
-def test_round_butterfly_conversion():
+def test_round_butterfly_conversion() -> None:
     b = RoundButterfly((2.54, 25.4), 254.0, units="metric")
 
     # No Effect
@@ -1141,7 +1141,7 @@ def test_round_butterfly_conversion():
     assert b.diameter == (254.0)
 
 
-def test_round_butterfly_offset():
+def test_round_butterfly_offset() -> None:
     b = RoundButterfly((0, 0), 1)
     b.offset(1, 0)
     assert b.position == (1.0, 0.0)
@@ -1149,7 +1149,7 @@ def test_round_butterfly_offset():
     assert b.position == (1.0, 1.0)
 
 
-def test_round_butterfly_bounds():
+def test_round_butterfly_bounds() -> None:
     """Test RoundButterfly bounding box calculation"""
     b = RoundButterfly((0, 0), 2)
     xbounds, ybounds = b.bounding_box
@@ -1157,7 +1157,7 @@ def test_round_butterfly_bounds():
     pytest.approx(ybounds, (-1, 1))
 
 
-def test_square_butterfly_ctor():
+def test_square_butterfly_ctor() -> None:
     """Test SquareButterfly creation"""
     test_cases = (((0, 0), 3), ((0, 0), 5), ((1, 1), 7))
     for pos, side in test_cases:
@@ -1166,13 +1166,13 @@ def test_square_butterfly_ctor():
         assert b.side == side
 
 
-def test_square_butterfly_ctor_validation():
+def test_square_butterfly_ctor_validation() -> None:
     """Test SquareButterfly argument validation"""
     pytest.raises(TypeError, SquareButterfly, 3, 5)
     pytest.raises(TypeError, SquareButterfly, (3, 4, 5), 5)
 
 
-def test_square_butterfly_bounds():
+def test_square_butterfly_bounds() -> None:
     """Test SquareButterfly bounding box calculation"""
     b = SquareButterfly((0, 0), 2)
     xbounds, ybounds = b.bounding_box
@@ -1180,7 +1180,7 @@ def test_square_butterfly_bounds():
     pytest.approx(ybounds, (-1, 1))
 
 
-def test_squarebutterfly_conversion():
+def test_squarebutterfly_conversion() -> None:
     b = SquareButterfly((2.54, 25.4), 254.0, units="metric")
 
     # No effect
@@ -1214,7 +1214,7 @@ def test_squarebutterfly_conversion():
     assert b.side == (254.0)
 
 
-def test_square_butterfly_offset():
+def test_square_butterfly_offset() -> None:
     b = SquareButterfly((0, 0), 1)
     b.offset(1, 0)
     assert b.position == (1.0, 0.0)
@@ -1222,7 +1222,7 @@ def test_square_butterfly_offset():
     assert b.position == (1.0, 1.0)
 
 
-def test_donut_ctor():
+def test_donut_ctor() -> None:
     """Test Donut primitive creation"""
     test_cases = (
         ((0, 0), "round", 3, 5),
@@ -1238,21 +1238,21 @@ def test_donut_ctor():
         assert d.outer_diameter == out_d
 
 
-def test_donut_ctor_validation():
+def test_donut_ctor_validation() -> None:
     pytest.raises(TypeError, Donut, 3, "round", 5, 7)
     pytest.raises(TypeError, Donut, (3, 4, 5), "round", 5, 7)
     pytest.raises(ValueError, Donut, (0, 0), "triangle", 3, 5)
     pytest.raises(ValueError, Donut, (0, 0), "round", 5, 3)
 
 
-def test_donut_bounds():
+def test_donut_bounds() -> None:
     d = Donut((0, 0), "round", 0.0, 2.0)
     xbounds, ybounds = d.bounding_box
     assert xbounds == (-1.0, 1.0)
     assert ybounds == (-1.0, 1.0)
 
 
-def test_donut_conversion():
+def test_donut_conversion() -> None:
     d = Donut((2.54, 25.4), "round", 254.0, 2540.0, units="metric")
 
     # No effect
@@ -1292,7 +1292,7 @@ def test_donut_conversion():
     assert d.outer_diameter == 2540.0
 
 
-def test_donut_offset():
+def test_donut_offset() -> None:
     d = Donut((0, 0), "round", 1, 10)
     d.offset(1, 0)
     assert d.position == (1.0, 0.0)
@@ -1300,7 +1300,7 @@ def test_donut_offset():
     assert d.position == (1.0, 1.0)
 
 
-def test_drill_ctor():
+def test_drill_ctor() -> None:
     """Test drill primitive creation"""
     test_cases = (((0, 0), 2), ((1, 1), 3), ((2, 2), 5))
     for position, diameter in test_cases:
@@ -1310,13 +1310,13 @@ def test_drill_ctor():
         assert d.radius == diameter / 2.0
 
 
-def test_drill_ctor_validation():
+def test_drill_ctor_validation() -> None:
     """Test drill argument validation"""
     pytest.raises(TypeError, Drill, 3, 5)
     pytest.raises(TypeError, Drill, (3, 4, 5), 5)
 
 
-def test_drill_bounds():
+def test_drill_bounds() -> None:
     d = Drill((0, 0), 2)
     xbounds, ybounds = d.bounding_box
     pytest.approx(xbounds, (-1, 1))
@@ -1327,7 +1327,7 @@ def test_drill_bounds():
     pytest.approx(ybounds, (1, 3))
 
 
-def test_drill_conversion():
+def test_drill_conversion() -> None:
     d = Drill((2.54, 25.4), 254.0, units="metric")
 
     # No effect
@@ -1361,7 +1361,7 @@ def test_drill_conversion():
     assert d.diameter == 254.0
 
 
-def test_drill_offset():
+def test_drill_offset() -> None:
     d = Drill((0, 0), 1.0)
     d.offset(1, 0)
     assert d.position == (1.0, 0.0)
@@ -1369,7 +1369,7 @@ def test_drill_offset():
     assert d.position == (1.0, 1.0)
 
 
-def test_drill_equality():
+def test_drill_equality() -> None:
     d = Drill((2.54, 25.4), 254.0)
     d1 = Drill((2.54, 25.4), 254.0)
     assert d == d1
@@ -1377,7 +1377,7 @@ def test_drill_equality():
     assert d != d1
 
 
-def test_slot_bounds():
+def test_slot_bounds() -> None:
     """Test Slot primitive bounding box calculation"""
     cases = [
         ((0, 0), (1, 1), ((-1, 2), (-1, 2))),

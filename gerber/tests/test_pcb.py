@@ -2,7 +2,7 @@ import os
 from gerber.pcb import PCB
 
 
-def test_from_directory():
+def test_from_directory() -> None:
     test_pcb = PCB.from_directory(
         os.path.join(os.path.dirname(__file__), "resources//eagle_files")
     )

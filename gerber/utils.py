@@ -29,7 +29,7 @@ from math import radians, sin, cos, sqrt, atan2, pi
 MILLIMETERS_PER_INCH = 25.4
 
 
-def parse_gerber_value(value, format=(2, 5), zero_suppression="trailing"):
+def parse_gerber_value(value, format=(2, 5), zero_suppression: str="trailing"):
     """Convert gerber/excellon formatted string to floating-point number
 
     .. note::
@@ -93,7 +93,7 @@ def parse_gerber_value(value, format=(2, 5), zero_suppression="trailing"):
     return -result if negative else result
 
 
-def write_gerber_value(value, format=(2, 5), zero_suppression="trailing"):
+def write_gerber_value(value, format=(2, 5), zero_suppression: str="trailing"):
     """Convert a floating point number to a Gerber/Excellon-formatted string.
 
     .. note::
@@ -166,7 +166,7 @@ def write_gerber_value(value, format=(2, 5), zero_suppression="trailing"):
     return "".join(digits) if not negative else "".join(["-"] + digits)
 
 
-def decimal_string(value, precision=6, padding=False):
+def decimal_string(value, precision: int=6, padding: bool=False):
     """Convert float to string with limited precision
 
     Parameters
@@ -204,7 +204,7 @@ def decimal_string(value, precision=6, padding=False):
         return int(floatstr)
 
 
-def detect_file_format(data):
+def detect_file_format(data) -> str:
     """Determine format of a file
 
     Parameters
@@ -274,7 +274,7 @@ def inch(value):
     return round(value / MILLIMETERS_PER_INCH, 5)
 
 
-def rotate_point(point, angle, center=(0.0, 0.0)):
+def rotate_point(point, angle: float, center=(0.0, 0.0)):
     """Rotate a point about another point.
 
     Parameters
@@ -308,7 +308,7 @@ def rotate_point(point, angle, center=(0.0, 0.0)):
     )
 
 
-def nearly_equal(point1, point2, ndigits=6):
+def nearly_equal(point1, point2, ndigits: int=6):
     """Are the points nearly equal"""
 
     return (
@@ -324,7 +324,7 @@ def sq_distance(point1, point2):
     return diff1 * diff1 + diff2 * diff2
 
 
-def listdir(directory, ignore_hidden=True, ignore_os=True):
+def listdir(directory, ignore_hidden: bool=True, ignore_os: bool=True):
     """List files in given directory.
     Differs from os.listdir() in that hidden and OS-generated files are ignored
     by default.

@@ -23,6 +23,7 @@ import json
 import os
 import re
 import sys
+from typing import Sequence
 
 try:
     from cStringIO import StringIO
@@ -100,7 +101,7 @@ class GerberFile(CamFile):
 
     """
 
-    def __init__(self, statements, settings, primitives, apertures, filename=None):
+    def __init__(self, statements, settings, primitives, apertures, filename=None) -> None:
         super(GerberFile, self).__init__(statements, settings, primitives, filename)
 
         self.apertures = apertures
@@ -149,14 +150,14 @@ class GerberFile(CamFile):
 
         return ((min_x, max_x), (min_y, max_y))
 
-    def write(self, filename, settings=None):
+    def write(self, filename, settings=None) -> None:
         """Write data out to a gerber file."""
         with open(filename, "w") as f:
             for statement in self.statements:
                 f.write(statement.to_gerber(settings or self.settings))
                 f.write("\n")
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units != "inch":
             self.units = "inch"
             for statement in self.statements:
@@ -164,7 +165,7 @@ class GerberFile(CamFile):
             for primitive in self.primitives:
                 primitive.to_inch()
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units != "metric":
             self.units = "metric"
             for statement in self.statements:
@@ -172,7 +173,7 @@ class GerberFile(CamFile):
             for primitive in self.primitives:
                 primitive.to_metric()
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         for statement in self.statements:
             statement.offset(x_offset, y_offset)
         for primitive in self.primitives:
@@ -267,7 +268,7 @@ class GerberParser(object):
     # Keep include loop from crashing us
     INCLUDE_FILE_RECURSION_LIMIT = 10
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.filename = None
         self.settings = FileSettings()
         self.statements = []
@@ -554,7 +555,7 @@ class GerberParser(object):
         else:
             raise Exception("Invalid statement to evaluate")
 
-    def _define_aperture(self, d, shape, modifiers):
+    def _define_aperture(self, d, shape, modifiers) -> None:
         aperture = None
         if shape == "C":
             diameter = modifiers[0][0]
@@ -645,7 +646,7 @@ class GerberParser(object):
         aperture.units = self.settings.units
         self.apertures[d] = aperture
 
-    def _evaluate_mode(self, stmt):
+    def _evaluate_mode(self, stmt) -> None:
         if stmt.type == "RegionMode":
             if self.region_mode == "on" and stmt.mode == "off":
                 # Sometimes we have regions that have no points. Skip those
@@ -663,7 +664,7 @@ class GerberParser(object):
         elif stmt.type == "QuadrantMode":
             self.quadrant_mode = stmt.mode
 
-    def _evaluate_param(self, stmt):
+    def _evaluate_param(self, stmt) -> None:
         if stmt.param == "FS":
             self.settings.zero_suppression = stmt.zero_suppression
             self.settings.format = stmt.format
@@ -684,7 +685,7 @@ class GerberParser(object):
             self.offset_a = self.offset_a if stmt.a is None else stmt.a
             self.offset_b = self.offset_b if stmt.b is None else stmt.b
 
-    def _evaluate_coord(self, stmt):
+    def _evaluate_coord(self, stmt) -> None:
         x = (self.x if stmt.x is None else stmt.x) + self.offset_a
         y = (self.y if stmt.y is None else stmt.y) + self.offset_b
 
@@ -832,7 +833,7 @@ class GerberParser(object):
                             self.primitives.append(renderable)
         self.x, self.y = x, y
 
-    def _find_center(self, start, end, offsets):
+    def _find_center(self, start, end, offsets: Sequence[int]):
         """
         In single quadrant mode, the offsets are always positive, which means
         there are 4 possible centers. The correct center is the only one that
@@ -903,7 +904,7 @@ class GerberParser(object):
         else:
             return (start[0] + offsets[0], start[1] + offsets[1])
 
-    def _evaluate_aperture(self, stmt):
+    def _evaluate_aperture(self, stmt) -> None:
         self.aperture = stmt.d
 
 

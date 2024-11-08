@@ -8,13 +8,13 @@ from ..excellon_statements import *
 from ..cam import FileSettings
 
 
-def test_excellon_statement_implementation():
+def test_excellon_statement_implementation() -> None:
     stmt = ExcellonStatement()
     pytest.raises(NotImplementedError, stmt.from_excellon, None)
     pytest.raises(NotImplementedError, stmt.to_excellon)
 
 
-def test_excellontstmt():
+def test_excellontstmt() -> None:
     """Smoke test ExcellonStatement"""
     stmt = ExcellonStatement()
     stmt.to_inch()
@@ -22,7 +22,7 @@ def test_excellontstmt():
     stmt.offset()
 
 
-def test_excellontool_factory():
+def test_excellontool_factory() -> None:
     """Test ExcellonTool factory methods"""
     exc_line = "T8F01B02S00003H04Z05C0.12500"
     settings = FileSettings(
@@ -56,7 +56,7 @@ def test_excellontool_factory():
     assert tool.depth_offset == 5
 
 
-def test_excellontool_dump():
+def test_excellontool_dump() -> None:
     """Test ExcellonTool to_excellon()"""
     exc_lines = [
         "T01F0S0C0.01200",
@@ -79,7 +79,7 @@ def test_excellontool_dump():
         assert tool.to_excellon() == line
 
 
-def test_excellontool_order():
+def test_excellontool_order() -> None:
     settings = FileSettings(
         format=(2, 5), zero_suppression="trailing", units="inch", notation="absolute"
     )
@@ -92,7 +92,7 @@ def test_excellontool_order():
     assert tool1.rpm == tool2.rpm
 
 
-def test_excellontool_conversion():
+def test_excellontool_conversion() -> None:
     tool = ExcellonTool.from_dict(
         FileSettings(units="metric"), {"number": 8, "diameter": 25.4}
     )
@@ -117,7 +117,7 @@ def test_excellontool_conversion():
     assert tool.diameter == 1.0
 
 
-def test_excellontool_repr():
+def test_excellontool_repr() -> None:
     tool = ExcellonTool.from_dict(FileSettings(), {"number": 8, "diameter": 0.125})
     assert str(tool) == "<ExcellonTool 08: 0.125in. dia.>"
     tool = ExcellonTool.from_dict(
@@ -126,7 +126,7 @@ def test_excellontool_repr():
     assert str(tool) == "<ExcellonTool 08: 0.125mm dia.>"
 
 
-def test_excellontool_equality():
+def test_excellontool_equality() -> None:
     t = ExcellonTool.from_dict(FileSettings(), {"number": 8, "diameter": 0.125})
     t1 = ExcellonTool.from_dict(FileSettings(), {"number": 8, "diameter": 0.125})
     assert t == t1
@@ -136,7 +136,7 @@ def test_excellontool_equality():
     assert t != t1
 
 
-def test_toolselection_factory():
+def test_toolselection_factory() -> None:
     """Test ToolSelectionStmt factory method"""
     stmt = ToolSelectionStmt.from_excellon("T01")
     assert stmt.tool == 1
@@ -149,7 +149,7 @@ def test_toolselection_factory():
     assert stmt.compensation_index is None
 
 
-def test_toolselection_dump():
+def test_toolselection_dump() -> None:
     """Test ToolSelectionStmt to_excellon()"""
     lines = ["T01", "T0223", "T10", "T09", "T0000"]
     for line in lines:
@@ -157,7 +157,7 @@ def test_toolselection_dump():
         assert stmt.to_excellon() == line
 
 
-def test_z_axis_infeed_rate_factory():
+def test_z_axis_infeed_rate_factory() -> None:
     """Test ZAxisInfeedRateStmt factory method"""
     stmt = ZAxisInfeedRateStmt.from_excellon("F01")
     assert stmt.rate == 1
@@ -167,7 +167,7 @@ def test_z_axis_infeed_rate_factory():
     assert stmt.rate == 3
 
 
-def test_z_axis_infeed_rate_dump():
+def test_z_axis_infeed_rate_dump() -> None:
     """Test ZAxisInfeedRateStmt to_excellon()"""
     inputs = [("F01", "F01"), ("F2", "F02"), ("F00003", "F03")]
     for input_rate, expected_output in inputs:
@@ -175,7 +175,7 @@ def test_z_axis_infeed_rate_dump():
         assert stmt.to_excellon() == expected_output
 
 
-def test_coordinatestmt_factory():
+def test_coordinatestmt_factory() -> None:
     """Test CoordinateStmt factory method"""
     settings = FileSettings(
         format=(2, 5), zero_suppression="trailing", units="inch", notation="absolute"
@@ -210,7 +210,7 @@ def test_coordinatestmt_factory():
     assert stmt.units == "metric"
 
 
-def test_coordinatestmt_dump():
+def test_coordinatestmt_dump() -> None:
     """Test CoordinateStmt to_excellon()"""
     lines = [
         "X278207Y65293",
@@ -235,7 +235,7 @@ def test_coordinatestmt_dump():
         assert stmt.to_excellon(settings) == line
 
 
-def test_coordinatestmt_conversion():
+def test_coordinatestmt_conversion() -> None:
 
     settings = FileSettings()
     settings.units = "metric"
@@ -275,7 +275,7 @@ def test_coordinatestmt_conversion():
     assert stmt.y == 25.4
 
 
-def test_coordinatestmt_offset():
+def test_coordinatestmt_offset() -> None:
     stmt = CoordinateStmt.from_excellon("X01Y01", FileSettings())
     stmt.offset()
     assert stmt.x == 1
@@ -288,7 +288,7 @@ def test_coordinatestmt_offset():
     assert stmt.y == 2.0
 
 
-def test_coordinatestmt_string():
+def test_coordinatestmt_string() -> None:
     settings = FileSettings(
         format=(2, 4), zero_suppression="leading", units="inch", notation="absolute"
     )
@@ -296,7 +296,7 @@ def test_coordinatestmt_string():
     assert str(stmt) == "<Coordinate Statement: X: 0.966 Y: 0.4639 >"
 
 
-def test_repeathole_stmt_factory():
+def test_repeathole_stmt_factory() -> None:
     stmt = RepeatHoleStmt.from_excellon(
         "R0004X015Y32", FileSettings(zeros="leading", units="inch")
     )
@@ -311,13 +311,13 @@ def test_repeathole_stmt_factory():
     assert stmt.units == "metric"
 
 
-def test_repeatholestmt_dump():
+def test_repeatholestmt_dump() -> None:
     line = "R4X015Y32"
     stmt = RepeatHoleStmt.from_excellon(line, FileSettings())
     assert stmt.to_excellon(FileSettings()) == line
 
 
-def test_repeatholestmt_conversion():
+def test_repeatholestmt_conversion() -> None:
     line = "R4X0254Y254"
     settings = FileSettings()
     settings.units = "metric"
@@ -358,12 +358,12 @@ def test_repeatholestmt_conversion():
     assert stmt.ydelta == 254.0
 
 
-def test_repeathole_str():
+def test_repeathole_str() -> None:
     stmt = RepeatHoleStmt.from_excellon("R4X015Y32", FileSettings())
     assert str(stmt) == "<Repeat Hole: 4 times, offset X: 1.5 Y: 32>"
 
 
-def test_commentstmt_factory():
+def test_commentstmt_factory() -> None:
     """Test CommentStmt factory method"""
     line = ";Layer_Color=9474304"
     stmt = CommentStmt.from_excellon(line)
@@ -378,7 +378,7 @@ def test_commentstmt_factory():
     assert stmt.comment == line[1:]
 
 
-def test_commentstmt_dump():
+def test_commentstmt_dump() -> None:
     """Test CommentStmt to_excellon()"""
     lines = [";Layer_Color=9474304", ";FILE_FORMAT=2:5", ";TYPE=PLATED"]
     for line in lines:
@@ -386,52 +386,52 @@ def test_commentstmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_header_begin_stmt():
+def test_header_begin_stmt() -> None:
     stmt = HeaderBeginStmt()
     assert stmt.to_excellon(None) == "M48"
 
 
-def test_header_end_stmt():
+def test_header_end_stmt() -> None:
     stmt = HeaderEndStmt()
     assert stmt.to_excellon(None) == "M95"
 
 
-def test_rewindstop_stmt():
+def test_rewindstop_stmt() -> None:
     stmt = RewindStopStmt()
     assert stmt.to_excellon(None) == "%"
 
 
-def test_z_axis_rout_position_stmt():
+def test_z_axis_rout_position_stmt() -> None:
     stmt = ZAxisRoutPositionStmt()
     assert stmt.to_excellon(None) == "M15"
 
 
-def test_retract_with_clamping_stmt():
+def test_retract_with_clamping_stmt() -> None:
     stmt = RetractWithClampingStmt()
     assert stmt.to_excellon(None) == "M16"
 
 
-def test_retract_without_clamping_stmt():
+def test_retract_without_clamping_stmt() -> None:
     stmt = RetractWithoutClampingStmt()
     assert stmt.to_excellon(None) == "M17"
 
 
-def test_cutter_compensation_off_stmt():
+def test_cutter_compensation_off_stmt() -> None:
     stmt = CutterCompensationOffStmt()
     assert stmt.to_excellon(None) == "G40"
 
 
-def test_cutter_compensation_left_stmt():
+def test_cutter_compensation_left_stmt() -> None:
     stmt = CutterCompensationLeftStmt()
     assert stmt.to_excellon(None) == "G41"
 
 
-def test_cutter_compensation_right_stmt():
+def test_cutter_compensation_right_stmt() -> None:
     stmt = CutterCompensationRightStmt()
     assert stmt.to_excellon(None) == "G42"
 
 
-def test_endofprogramstmt_factory():
+def test_endofprogramstmt_factory() -> None:
     settings = FileSettings(units="inch")
     stmt = EndOfProgramStmt.from_excellon("M30X01Y02", settings)
     assert stmt.x == 1.0
@@ -447,14 +447,14 @@ def test_endofprogramstmt_factory():
     assert stmt.y == 2.0
 
 
-def test_endofprogramStmt_dump():
+def test_endofprogramStmt_dump() -> None:
     lines = ["M30X01Y02"]
     for line in lines:
         stmt = EndOfProgramStmt.from_excellon(line, FileSettings())
         assert stmt.to_excellon(FileSettings()) == line
 
 
-def test_endofprogramstmt_conversion():
+def test_endofprogramstmt_conversion() -> None:
     settings = FileSettings()
     settings.units = "metric"
     stmt = EndOfProgramStmt.from_excellon("M30X0254Y254", settings)
@@ -492,7 +492,7 @@ def test_endofprogramstmt_conversion():
     assert stmt.y == 254.0
 
 
-def test_endofprogramstmt_offset():
+def test_endofprogramstmt_offset() -> None:
     stmt = EndOfProgramStmt(1, 1)
     stmt.offset()
     assert stmt.x == 1
@@ -505,7 +505,7 @@ def test_endofprogramstmt_offset():
     assert stmt.y == 2.0
 
 
-def test_unitstmt_factory():
+def test_unitstmt_factory() -> None:
     """Test UnitStmt factory method"""
     line = "INCH,LZ"
     stmt = UnitStmt.from_excellon(line)
@@ -528,7 +528,7 @@ def test_unitstmt_factory():
     assert stmt.zeros == "trailing"
 
 
-def test_unitstmt_dump():
+def test_unitstmt_dump() -> None:
     """Test UnitStmt to_excellon()"""
     lines = ["INCH,LZ", "INCH,TZ", "METRIC,LZ", "METRIC,TZ"]
     for line in lines:
@@ -536,7 +536,7 @@ def test_unitstmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_unitstmt_conversion():
+def test_unitstmt_conversion() -> None:
     stmt = UnitStmt.from_excellon("METRIC,TZ")
     stmt.to_inch()
     assert stmt.units == "inch"
@@ -546,7 +546,7 @@ def test_unitstmt_conversion():
     assert stmt.units == "metric"
 
 
-def test_incrementalmode_factory():
+def test_incrementalmode_factory() -> None:
     """Test IncrementalModeStmt factory method"""
     line = "ICI,ON"
     stmt = IncrementalModeStmt.from_excellon(line)
@@ -557,7 +557,7 @@ def test_incrementalmode_factory():
     assert stmt.mode == "off"
 
 
-def test_incrementalmode_dump():
+def test_incrementalmode_dump() -> None:
     """Test IncrementalModeStmt to_excellon()"""
     lines = ["ICI,ON", "ICI,OFF"]
     for line in lines:
@@ -565,12 +565,12 @@ def test_incrementalmode_dump():
         assert stmt.to_excellon() == line
 
 
-def test_incrementalmode_validation():
+def test_incrementalmode_validation() -> None:
     """Test IncrementalModeStmt input validation"""
     pytest.raises(ValueError, IncrementalModeStmt, "OFF-ISH")
 
 
-def test_versionstmt_factory():
+def test_versionstmt_factory() -> None:
     """Test VersionStmt factory method"""
     line = "VER,1"
     stmt = VersionStmt.from_excellon(line)
@@ -581,7 +581,7 @@ def test_versionstmt_factory():
     assert stmt.version == 2
 
 
-def test_versionstmt_dump():
+def test_versionstmt_dump() -> None:
     """Test VersionStmt to_excellon()"""
     lines = ["VER,1", "VER,2"]
     for line in lines:
@@ -589,12 +589,12 @@ def test_versionstmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_versionstmt_validation():
+def test_versionstmt_validation() -> None:
     """Test VersionStmt input validation"""
     pytest.raises(ValueError, VersionStmt, 3)
 
 
-def test_formatstmt_factory():
+def test_formatstmt_factory() -> None:
     """Test FormatStmt factory method"""
     line = "FMAT,1"
     stmt = FormatStmt.from_excellon(line)
@@ -605,7 +605,7 @@ def test_formatstmt_factory():
     assert stmt.format == 2
 
 
-def test_formatstmt_dump():
+def test_formatstmt_dump() -> None:
     """Test FormatStmt to_excellon()"""
     lines = ["FMAT,1", "FMAT,2"]
     for line in lines:
@@ -613,12 +613,12 @@ def test_formatstmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_formatstmt_validation():
+def test_formatstmt_validation() -> None:
     """Test FormatStmt input validation"""
     pytest.raises(ValueError, FormatStmt, 3)
 
 
-def test_linktoolstmt_factory():
+def test_linktoolstmt_factory() -> None:
     """Test LinkToolStmt factory method"""
     line = "1/2/3/4"
     stmt = LinkToolStmt.from_excellon(line)
@@ -629,7 +629,7 @@ def test_linktoolstmt_factory():
     assert stmt.linked_tools == [1, 2, 3, 4]
 
 
-def test_linktoolstmt_dump():
+def test_linktoolstmt_dump() -> None:
     """Test LinkToolStmt to_excellon()"""
     lines = ["1/2/3/4", "5/6/7"]
     for line in lines:
@@ -637,7 +637,7 @@ def test_linktoolstmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_measmodestmt_factory():
+def test_measmodestmt_factory() -> None:
     """Test MeasuringModeStmt factory method"""
     line = "M72"
     stmt = MeasuringModeStmt.from_excellon(line)
@@ -648,7 +648,7 @@ def test_measmodestmt_factory():
     assert stmt.units == "metric"
 
 
-def test_measmodestmt_dump():
+def test_measmodestmt_dump() -> None:
     """Test MeasuringModeStmt to_excellon()"""
     lines = ["M71", "M72"]
     for line in lines:
@@ -656,13 +656,13 @@ def test_measmodestmt_dump():
         assert stmt.to_excellon() == line
 
 
-def test_measmodestmt_validation():
+def test_measmodestmt_validation() -> None:
     """Test MeasuringModeStmt input validation"""
     pytest.raises(ValueError, MeasuringModeStmt.from_excellon, "M70")
     pytest.raises(ValueError, MeasuringModeStmt, "millimeters")
 
 
-def test_measmodestmt_conversion():
+def test_measmodestmt_conversion() -> None:
     line = "M72"
     stmt = MeasuringModeStmt.from_excellon(line)
     assert stmt.units == "inch"
@@ -676,32 +676,32 @@ def test_measmodestmt_conversion():
     assert stmt.units == "inch"
 
 
-def test_routemode_stmt():
+def test_routemode_stmt() -> None:
     stmt = RouteModeStmt()
     assert stmt.to_excellon(FileSettings()) == "G00"
 
 
-def test_linearmode_stmt():
+def test_linearmode_stmt() -> None:
     stmt = LinearModeStmt()
     assert stmt.to_excellon(FileSettings()) == "G01"
 
 
-def test_drillmode_stmt():
+def test_drillmode_stmt() -> None:
     stmt = DrillModeStmt()
     assert stmt.to_excellon(FileSettings()) == "G05"
 
 
-def test_absolutemode_stmt():
+def test_absolutemode_stmt() -> None:
     stmt = AbsoluteModeStmt()
     assert stmt.to_excellon(FileSettings()) == "G90"
 
 
-def test_unknownstmt():
+def test_unknownstmt() -> None:
     stmt = UnknownStmt("TEST")
     assert stmt.stmt == "TEST"
     assert str(stmt) == "<Unknown Statement: TEST>"
 
 
-def test_unknownstmt_dump():
+def test_unknownstmt_dump() -> None:
     stmt = UnknownStmt("TEST")
     assert stmt.to_excellon(FileSettings()) == "TEST"

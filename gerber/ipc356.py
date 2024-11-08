@@ -73,7 +73,7 @@ class IPCNetlist(CamFile):
         parser = IPCNetlistParser()
         return parser.parse(filename)
 
-    def __init__(self, statements, settings, primitives=None, filename=None):
+    def __init__(self, statements, settings, primitives=None, filename=None) -> None:
         self.statements = statements
         self.units = settings.units
         self.angle_units = settings.angle_units
@@ -148,7 +148,7 @@ class IPCNetlist(CamFile):
             record for record in self.statements if isinstance(record, IPC356_Adjacency)
         ]
 
-    def render(self, ctx, layer="both", filename=None):
+    def render(self, ctx, layer: str="both", filename=None) -> None:
         for p in self.primitives:
             if layer == "both" and p.layer in ("top", "bottom", "both"):
                 ctx.render(p)
@@ -163,7 +163,7 @@ class IPCNetlist(CamFile):
 class IPCNetlistParser(object):
     # TODO: Allow multi-line statements (e.g. Altium board edge)
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.units = "inch"
         self.angle_units = "degrees"
         self.statements = []
@@ -194,7 +194,7 @@ class IPCNetlistParser(object):
 
         return IPCNetlist(self.statements, self.settings, filename=filename)
 
-    def _parse_line(self, line):
+    def _parse_line(self, line) -> None:
         if not len(line):
             return
         if line[0] == "C":
@@ -254,10 +254,10 @@ class IPC356_Comment(object):
         comment = line[2:].strip()
         return cls(comment)
 
-    def __init__(self, comment):
+    def __init__(self, comment: str) -> None:
         self.comment = comment
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 Comment: %s>" % self.comment
 
 
@@ -272,11 +272,11 @@ class IPC356_Parameter(object):
         value = " ".join(splitline[1:]).strip()
         return cls(parameter, value)
 
-    def __init__(self, parameter, value):
+    def __init__(self, parameter, value) -> None:
         self.parameter = parameter
         self.value = value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 Parameter: %s=%s>" % (self.parameter, self.value)
 
 
@@ -384,11 +384,11 @@ class IPC356_TestRecord(object):
 
         return cls(**record)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 %s Test Record: %s>" % (self.net_name, self.feature_type)
 
 
@@ -409,11 +409,11 @@ class IPC356_Outline(object):
             points.append((x * scale, y * scale))
         return cls(type, points)
 
-    def __init__(self, type, points):
+    def __init__(self, type, points) -> None:
         self.type = type
         self.points = points
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 %s Outline Definition>" % self.type
 
 
@@ -454,13 +454,13 @@ class IPC356_Conductor(object):
             shapes.append(tuple(shape))
         return cls(net_name, layer, aperture, tuple(shapes))
 
-    def __init__(self, net_name, layer, aperture, shapes):
+    def __init__(self, net_name: str, layer, aperture, shapes) -> None:
         self.net_name = net_name
         self.layer = layer
         self.aperture = aperture
         self.shapes = shapes
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 %s Conductor Record>" % self.net_name
 
 
@@ -474,31 +474,31 @@ class IPC356_Adjacency(object):
 
         return cls(nets[0], nets[1:])
 
-    def __init__(self, net, adjacent_nets):
+    def __init__(self, net, adjacent_nets) -> None:
         self.net = net
         self.adjacent_nets = adjacent_nets
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 %s Adjacency Record>" % self.net
 
 
 class IPC356_EndOfFile(object):
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def to_netlist(self):
+    def to_netlist(self) -> str:
         return "999"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 EOF>"
 
 
 class IPC356_Net(object):
 
-    def __init__(self, name, adjacent_nets):
+    def __init__(self, name: str, adjacent_nets) -> None:
         self.name = name
         self.adjacent_nets = set(adjacent_nets) if adjacent_nets is not None else set()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<IPC-D-356 Net %s>" % self.name

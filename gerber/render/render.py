@@ -56,7 +56,7 @@ class GerberContext(object):
         Rendering opacity. Between 0.0 (transparent) and 1.0 (opaque.)
     """
 
-    def __init__(self, units="inch"):
+    def __init__(self, units: str="inch") -> None:
         self._units = units
         self._color = (0.7215, 0.451, 0.200)
         self._background_color = (0.0, 0.0, 0.0)
@@ -119,7 +119,7 @@ class GerberContext(object):
         return self._alpha
 
     @alpha.setter
-    def alpha(self, alpha):
+    def alpha(self, alpha: float):
         if alpha < 0 or alpha > 1:
             raise ValueError("Alpha must be between 0.0 and 1.0")
         self._alpha = alpha
@@ -129,10 +129,10 @@ class GerberContext(object):
         return self._invert
 
     @invert.setter
-    def invert(self, invert):
+    def invert(self, invert) -> None:
         self._invert = invert
 
-    def render(self, primitive):
+    def render(self, primitive) -> None:
         if not primitive:
             return
 
@@ -166,7 +166,7 @@ class GerberContext(object):
 
         self.post_render_primitive(primitive)
 
-    def set_bounds(self, bounds, *args, **kwargs):
+    def set_bounds(self, bounds, *args, **kwargs) -> None:
         """Called by the renderer to set the extents of the file to render.
 
         Parameters
@@ -176,65 +176,65 @@ class GerberContext(object):
         """
         pass
 
-    def paint_background(self):
+    def paint_background(self) -> None:
         pass
 
-    def new_render_layer(self):
+    def new_render_layer(self) -> None:
         pass
 
-    def flatten(self):
+    def flatten(self) -> None:
         pass
 
-    def pre_render_primitive(self, primitive):
+    def pre_render_primitive(self, primitive) -> None:
         """
         Called before rendering a primitive. Use the callback to perform some action before rendering
         a primitive, for example adding a comment.
         """
         return
 
-    def post_render_primitive(self, primitive):
+    def post_render_primitive(self, primitive) -> None:
         """
         Called after rendering a primitive. Use the callback to perform some action after rendering
         a primitive
         """
         return
 
-    def _render_line(self, primitive, color):
+    def _render_line(self, primitive, color) -> None:
         pass
 
-    def _render_arc(self, primitive, color):
+    def _render_arc(self, primitive, color) -> None:
         pass
 
-    def _render_region(self, primitive, color):
+    def _render_region(self, primitive, color) -> None:
         pass
 
-    def _render_circle(self, primitive, color):
+    def _render_circle(self, primitive, color) -> None:
         pass
 
-    def _render_rectangle(self, primitive, color):
+    def _render_rectangle(self, primitive, color) -> None:
         pass
 
-    def _render_obround(self, primitive, color):
+    def _render_obround(self, primitive, color) -> None:
         pass
 
-    def _render_polygon(self, primitive, color):
+    def _render_polygon(self, primitive, color) -> None:
         pass
 
-    def _render_drill(self, primitive, color):
+    def _render_drill(self, primitive, color) -> None:
         pass
 
-    def _render_slot(self, primitive, color):
+    def _render_slot(self, primitive, color) -> None:
         pass
 
-    def _render_amgroup(self, primitive, color):
+    def _render_amgroup(self, primitive, color) -> None:
         pass
 
-    def _render_test_record(self, primitive, color):
+    def _render_test_record(self, primitive, color) -> None:
         pass
 
 
 class RenderSettings(object):
-    def __init__(self, color=(0.0, 0.0, 0.0), alpha=1.0, invert=False, mirror=False):
+    def __init__(self, color=(0.0, 0.0, 0.0), alpha: float=1.0, invert: bool=False, mirror: bool=False) -> None:
         self.color = color
         self.alpha = alpha
         self.invert = invert

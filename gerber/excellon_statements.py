@@ -68,20 +68,20 @@ class ExcellonStatement(object):
     def from_excellon(cls, line):
         raise NotImplementedError("from_excellon must be implemented in a " "subclass")
 
-    def __init__(self, unit="inch", id=None):
+    def __init__(self, unit: str="inch", id=None) -> None:
         self.units = unit
         self.id = uuid.uuid4().int if id is None else id
 
     def to_excellon(self, settings=None):
         raise NotImplementedError("to_excellon must be implemented in a " "subclass")
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.units = "inch"
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.units = "metric"
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         pass
 
     def __eq__(self, other):
@@ -220,7 +220,7 @@ class ExcellonTool(ExcellonStatement):
         """
         return cls(settings, **tool_dict)
 
-    def __init__(self, settings, **kwargs):
+    def __init__(self, settings, **kwargs) -> None:
         if kwargs.get("id") is not None:
             super(ExcellonTool, self).__init__(id=kwargs.get("id"))
         self.settings = settings
@@ -258,19 +258,19 @@ class ExcellonTool(ExcellonStatement):
             stmt += "Z%s" % write_gerber_value(self.depth_offset, fmt, zs)
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.settings.units != "inch":
             self.settings.units = "inch"
             if self.diameter is not None:
                 self.diameter = inch(self.diameter)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.settings.units != "metric":
             self.settings.units = "metric"
             if self.diameter is not None:
                 self.diameter = metric(self.diameter)
 
-    def _hit(self):
+    def _hit(self) -> None:
         self.hit_count += 1
 
     def equivalent(self, other):
@@ -292,7 +292,7 @@ class ExcellonTool(ExcellonStatement):
             and self.settings.units == other.settings.units
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         unit = "in." if self.settings.units == "inch" else "mm"
         fmtstr = "<ExcellonTool %%02d: %%%d.%dg%%s dia.>" % self.settings.format
         return fmtstr % (self.number, self.diameter, unit)
@@ -326,7 +326,7 @@ class ToolSelectionStmt(ExcellonStatement):
 
         return cls(tool, compensation_index, **kwargs)
 
-    def __init__(self, tool, compensation_index=None, **kwargs):
+    def __init__(self, tool, compensation_index=None, **kwargs) -> None:
         super(ToolSelectionStmt, self).__init__(**kwargs)
         tool = int(tool)
         compensation_index = (
@@ -347,7 +347,7 @@ class NextToolSelectionStmt(ExcellonStatement):
     # TODO the statement exists outside of the context of the file,
     # so it is imposible to know that it is really the next tool
 
-    def __init__(self, cur_tool, next_tool, **kwargs):
+    def __init__(self, cur_tool, next_tool, **kwargs) -> None:
         """
         Select the next tool in the wheel.
         Parameters
@@ -385,11 +385,11 @@ class ZAxisInfeedRateStmt(ExcellonStatement):
 
         return cls(rate, **kwargs)
 
-    def __init__(self, rate, **kwargs):
+    def __init__(self, rate: float, **kwargs) -> None:
         super(ZAxisInfeedRateStmt, self).__init__(**kwargs)
         self.rate = rate
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "F%02d" % self.rate
 
 
@@ -424,7 +424,7 @@ class CoordinateStmt(ExcellonStatement):
         c.units = settings.units
         return c
 
-    def __init__(self, x=None, y=None, **kwargs):
+    def __init__(self, x=None, y=None, **kwargs) -> None:
         super(CoordinateStmt, self).__init__(**kwargs)
         self.x = x
         self.y = y
@@ -446,7 +446,7 @@ class CoordinateStmt(ExcellonStatement):
             )
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units == "metric":
             self.units = "inch"
             if self.x is not None:
@@ -454,7 +454,7 @@ class CoordinateStmt(ExcellonStatement):
             if self.y is not None:
                 self.y = inch(self.y)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units == "inch":
             self.units = "metric"
             if self.x is not None:
@@ -462,13 +462,13 @@ class CoordinateStmt(ExcellonStatement):
             if self.y is not None:
                 self.y = metric(self.y)
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         if self.x is not None:
             self.x += x_offset
         if self.y is not None:
             self.y += y_offset
 
-    def __str__(self):
+    def __str__(self) -> str:
         coord_str = ""
         if self.x is not None:
             coord_str += "X: %g " % self.x
@@ -506,7 +506,7 @@ class RepeatHoleStmt(ExcellonStatement):
         c.units = settings.units
         return c
 
-    def __init__(self, count, xdelta=0.0, ydelta=0.0, **kwargs):
+    def __init__(self, count: int, xdelta: float=0.0, ydelta: float=0.0, **kwargs) -> None:
         super(RepeatHoleStmt, self).__init__(**kwargs)
         self.count = count
         self.xdelta = xdelta
@@ -524,7 +524,7 @@ class RepeatHoleStmt(ExcellonStatement):
             )
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units == "metric":
             self.units = "inch"
             if self.xdelta is not None:
@@ -532,7 +532,7 @@ class RepeatHoleStmt(ExcellonStatement):
             if self.ydelta is not None:
                 self.ydelta = inch(self.ydelta)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units == "inch":
             self.units = "metric"
             if self.xdelta is not None:
@@ -540,7 +540,7 @@ class RepeatHoleStmt(ExcellonStatement):
             if self.ydelta is not None:
                 self.ydelta = metric(self.ydelta)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Repeat Hole: %d times, offset X: %g Y: %g>" % (
             self.count,
             self.xdelta if self.xdelta is not None else 0,
@@ -554,92 +554,92 @@ class CommentStmt(ExcellonStatement):
     def from_excellon(cls, line, **kwargs):
         return cls(line.lstrip(";"))
 
-    def __init__(self, comment, **kwargs):
+    def __init__(self, comment: str, **kwargs) -> None:
         super(CommentStmt, self).__init__(**kwargs)
         self.comment = comment
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return ";%s" % self.comment
 
 
 class HeaderBeginStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(HeaderBeginStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "M48"
 
 
 class HeaderEndStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(HeaderEndStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "M95"
 
 
 class RewindStopStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(RewindStopStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "%"
 
 
 class ZAxisRoutPositionStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(ZAxisRoutPositionStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "M15"
 
 
 class RetractWithClampingStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(RetractWithClampingStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "M16"
 
 
 class RetractWithoutClampingStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(RetractWithoutClampingStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "M17"
 
 
 class CutterCompensationOffStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(CutterCompensationOffStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G40"
 
 
 class CutterCompensationLeftStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(CutterCompensationLeftStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G41"
 
 
 class CutterCompensationRightStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(CutterCompensationRightStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G42"
 
 
@@ -663,7 +663,7 @@ class EndOfProgramStmt(ExcellonStatement):
         c.units = settings.units
         return c
 
-    def __init__(self, x=None, y=None, **kwargs):
+    def __init__(self, x=None, y=None, **kwargs) -> None:
         super(EndOfProgramStmt, self).__init__(**kwargs)
         self.x = x
         self.y = y
@@ -676,7 +676,7 @@ class EndOfProgramStmt(ExcellonStatement):
             stmt += "Y%s" % write_gerber_value(self.y)
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units == "metric":
             self.units = "inch"
             if self.x is not None:
@@ -684,7 +684,7 @@ class EndOfProgramStmt(ExcellonStatement):
             if self.y is not None:
                 self.y = inch(self.y)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units == "inch":
             self.units = "metric"
             if self.x is not None:
@@ -692,7 +692,7 @@ class EndOfProgramStmt(ExcellonStatement):
             if self.y is not None:
                 self.y = metric(self.y)
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         if self.x is not None:
             self.x += x_offset
         if self.y is not None:
@@ -721,7 +721,7 @@ class UnitStmt(ExcellonStatement):
             format = None
         return cls(units, zeros, format, **kwargs)
 
-    def __init__(self, units="inch", zeros="leading", format=None, **kwargs):
+    def __init__(self, units: str="inch", zeros: str="leading", format=None, **kwargs) -> None:
         super(UnitStmt, self).__init__(**kwargs)
         self.units = units.lower()
         self.zeros = zeros
@@ -735,10 +735,10 @@ class UnitStmt(ExcellonStatement):
         )
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.units = "inch"
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.units = "metric"
 
 
@@ -748,13 +748,13 @@ class IncrementalModeStmt(ExcellonStatement):
     def from_excellon(cls, line, **kwargs):
         return cls("off", **kwargs) if "OFF" in line else cls("on", **kwargs)
 
-    def __init__(self, mode="off", **kwargs):
+    def __init__(self, mode: str="off", **kwargs) -> None:
         super(IncrementalModeStmt, self).__init__(**kwargs)
         if mode.lower() not in ["on", "off"]:
             raise ValueError('Mode may be "on" or "off"')
         self.mode = mode
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "ICI,%s" % ("OFF" if self.mode == "off" else "ON")
 
 
@@ -765,14 +765,14 @@ class VersionStmt(ExcellonStatement):
         version = int(line.split(",")[1])
         return cls(version, **kwargs)
 
-    def __init__(self, version=1, **kwargs):
+    def __init__(self, version: int=1, **kwargs) -> None:
         super(VersionStmt, self).__init__(**kwargs)
         version = int(version)
         if version not in [1, 2]:
             raise ValueError("Valid versions are  1 or 2")
         self.version = version
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "VER,%d" % self.version
 
 
@@ -783,14 +783,14 @@ class FormatStmt(ExcellonStatement):
         fmt = int(line.split(",")[1])
         return cls(fmt, **kwargs)
 
-    def __init__(self, format=1, **kwargs):
+    def __init__(self, format: int=1, **kwargs) -> None:
         super(FormatStmt, self).__init__(**kwargs)
         format = int(format)
         if format not in [1, 2]:
             raise ValueError("Valid formats are 1 or 2")
         self.format = format
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "FMAT,%d" % self.format
 
     @property
@@ -805,7 +805,7 @@ class LinkToolStmt(ExcellonStatement):
         linked = [int(tool) for tool in line.split("/")]
         return cls(linked, **kwargs)
 
-    def __init__(self, linked_tools, **kwargs):
+    def __init__(self, linked_tools, **kwargs) -> None:
         super(LinkToolStmt, self).__init__(**kwargs)
         self.linked_tools = [int(x) for x in linked_tools]
 
@@ -821,7 +821,7 @@ class MeasuringModeStmt(ExcellonStatement):
             raise ValueError("Not a measuring mode statement")
         return cls("inch", **kwargs) if "M72" in line else cls("metric", **kwargs)
 
-    def __init__(self, units="inch", **kwargs):
+    def __init__(self, units: str="inch", **kwargs) -> None:
         super(MeasuringModeStmt, self).__init__(**kwargs)
         units = units.lower()
         if units not in ["inch", "metric"]:
@@ -831,46 +831,46 @@ class MeasuringModeStmt(ExcellonStatement):
     def to_excellon(self, settings=None):
         return "M72" if self.units == "inch" else "M71"
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         self.units = "inch"
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         self.units = "metric"
 
 
 class RouteModeStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(RouteModeStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G00"
 
 
 class LinearModeStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(LinearModeStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G01"
 
 
 class DrillModeStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(DrillModeStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G05"
 
 
 class AbsoluteModeStmt(ExcellonStatement):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(AbsoluteModeStmt, self).__init__(**kwargs)
 
-    def to_excellon(self, settings=None):
+    def to_excellon(self, settings=None) -> str:
         return "G90"
 
 
@@ -880,14 +880,14 @@ class UnknownStmt(ExcellonStatement):
     def from_excellon(cls, line, **kwargs):
         return cls(line, **kwargs)
 
-    def __init__(self, stmt, **kwargs):
+    def __init__(self, stmt, **kwargs) -> None:
         super(UnknownStmt, self).__init__(**kwargs)
         self.stmt = stmt
 
     def to_excellon(self, settings=None):
         return self.stmt
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<Unknown Statement: %s>" % self.stmt
 
 
@@ -944,7 +944,7 @@ class SlotStmt(ExcellonStatement):
 
         return (x_coord, y_coord)
 
-    def __init__(self, x_start=None, y_start=None, x_end=None, y_end=None, **kwargs):
+    def __init__(self, x_start=None, y_start=None, x_end=None, y_end=None, **kwargs) -> None:
         super(SlotStmt, self).__init__(**kwargs)
         self.x_start = x_start
         self.y_start = y_start
@@ -977,7 +977,7 @@ class SlotStmt(ExcellonStatement):
 
         return stmt
 
-    def to_inch(self):
+    def to_inch(self) -> None:
         if self.units == "metric":
             self.units = "inch"
             if self.x_start is not None:
@@ -989,7 +989,7 @@ class SlotStmt(ExcellonStatement):
             if self.y_end is not None:
                 self.y_end = inch(self.y_end)
 
-    def to_metric(self):
+    def to_metric(self) -> None:
         if self.units == "inch":
             self.units = "metric"
             if self.x_start is not None:
@@ -1001,7 +1001,7 @@ class SlotStmt(ExcellonStatement):
             if self.y_end is not None:
                 self.y_end = metric(self.y_end)
 
-    def offset(self, x_offset=0, y_offset=0):
+    def offset(self, x_offset: int=0, y_offset: int=0) -> None:
         if self.x_start is not None:
             self.x_start += x_offset
         if self.y_start is not None:
@@ -1011,7 +1011,7 @@ class SlotStmt(ExcellonStatement):
         if self.y_end is not None:
             self.y_end += y_offset
 
-    def __str__(self):
+    def __str__(self) -> str:
         start_str = ""
         if self.x_start is not None:
             start_str += "X: %g " % self.x_start

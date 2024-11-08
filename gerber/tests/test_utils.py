@@ -7,7 +7,7 @@ import pytest
 from ..utils import *
 
 
-def test_zero_suppression():
+def test_zero_suppression() -> None:
     """Test gerber value parser and writer handle zero suppression correctly."""
     # Default format
     fmt = (2, 5)
@@ -62,7 +62,7 @@ def test_zero_suppression():
     assert write_gerber_value(0.000000001, fmt, "trailing") == "0"
 
 
-def test_format():
+def test_format() -> None:
     """Test gerber value parser and writer handle format correctly"""
     zero_suppression = "leading"
     test_cases = [
@@ -107,7 +107,7 @@ def test_format():
         assert string == write_gerber_value(value, fmt, zero_suppression)
 
 
-def test_decimal_truncation():
+def test_decimal_truncation() -> None:
     """Test decimal_string truncates value to the correct precision"""
     value = 1.123456789
     for x in range(10):
@@ -116,7 +116,7 @@ def test_decimal_truncation():
         assert result == calculated
 
 
-def test_decimal_padding():
+def test_decimal_padding() -> None:
     """Test decimal_string padding"""
     value = 1.123
     assert decimal_string(value, precision=3, padding=True) == "1.123"
@@ -126,26 +126,26 @@ def test_decimal_padding():
     assert decimal_string(0, precision=6, padding=True) == "0.000000"
 
 
-def test_parse_format_validation():
+def test_parse_format_validation() -> None:
     """Test parse_gerber_value() format validation"""
     pytest.raises(ValueError, parse_gerber_value, "00001111", (7, 5))
     pytest.raises(ValueError, parse_gerber_value, "00001111", (5, 8))
     pytest.raises(ValueError, parse_gerber_value, "00001111", (13, 1))
 
 
-def test_write_format_validation():
+def test_write_format_validation() -> None:
     """Test write_gerber_value() format validation"""
     pytest.raises(ValueError, write_gerber_value, 69.0, (7, 5))
     pytest.raises(ValueError, write_gerber_value, 69.0, (5, 8))
     pytest.raises(ValueError, write_gerber_value, 69.0, (13, 1))
 
 
-def test_detect_format_with_short_file():
+def test_detect_format_with_short_file() -> None:
     """Verify file format detection works with short files"""
     assert "unknown" == detect_file_format("gerber/tests/__init__.py")
 
 
-def test_validate_coordinates():
+def test_validate_coordinates() -> None:
     pytest.raises(TypeError, validate_coordinates, 3)
     pytest.raises(TypeError, validate_coordinates, 3.1)
     pytest.raises(TypeError, validate_coordinates, "14")
@@ -154,7 +154,7 @@ def test_validate_coordinates():
     pytest.raises(TypeError, validate_coordinates, (0, "string"))
 
 
-def test_convex_hull():
+def test_convex_hull() -> None:
     points = [(0, 0), (1, 0), (1, 1), (0.5, 0.5), (0, 1), (0, 0)]
     expected = [(0, 0), (1, 0), (1, 1), (0, 1), (0, 0)]
     assert set(convex_hull(points)) == set(expected)

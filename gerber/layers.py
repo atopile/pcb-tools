@@ -295,7 +295,7 @@ def guess_layer_class_by_content(filename):
     return False
 
 
-def sort_layers(layers, from_top=True):
+def sort_layers(layers, from_top: bool=True):
     layer_order = [
         "outline",
         "toppaste",
@@ -363,7 +363,7 @@ class PCBLayer(object):
             layer_class = "ipc_netlist"
         return cls(filename, layer_class, camfile)
 
-    def __init__(self, filename=None, layer_class=None, cam_source=None, **kwargs):
+    def __init__(self, filename=None, layer_class=None, cam_source=None, **kwargs) -> None:
         super(PCBLayer, self).__init__(**kwargs)
         self.filename = filename
         self.layer_class = layer_class
@@ -378,7 +378,7 @@ class PCBLayer(object):
         else:
             return None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<PCBLayer: {}>".format(self.layer_class)
 
 
@@ -387,7 +387,7 @@ class DrillLayer(PCBLayer):
     def from_cam(cls, camfile):
         return cls(camfile.filename, camfile)
 
-    def __init__(self, filename=None, cam_source=None, layers=None, **kwargs):
+    def __init__(self, filename=None, cam_source=None, layers=None, **kwargs) -> None:
         super(DrillLayer, self).__init__(filename, "drill", cam_source, **kwargs)
         self.layers = layers if layers is not None else ["top", "bottom"]
 
@@ -403,7 +403,7 @@ class InternalLayer(PCBLayer):
             order = 0
         return cls(filename, camfile, order)
 
-    def __init__(self, filename=None, cam_source=None, order=0, **kwargs):
+    def __init__(self, filename=None, cam_source=None, order: int=0, **kwargs) -> None:
         super(InternalLayer, self).__init__(filename, "internal", cam_source, **kwargs)
         self.order = order
 

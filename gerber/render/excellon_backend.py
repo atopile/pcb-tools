@@ -8,7 +8,7 @@ class ExcellonContext(GerberContext):
     MODE_DRILL = 1
     MODE_SLOT = 2
 
-    def __init__(self, settings):
+    def __init__(self, settings) -> None:
         GerberContext.__init__(self)
 
         # Statements that we write
@@ -41,7 +41,7 @@ class ExcellonContext(GerberContext):
         else:
             self.body.append(AbsoluteModeStmt())
 
-    def _start_comments(self):
+    def _start_comments(self) -> None:
 
         # Write the digits used - this isn't valid Excellon statement, so we write as a comment
         self.comments.append(
@@ -74,10 +74,10 @@ class ExcellonContext(GerberContext):
             + self._get_end()
         )
 
-    def set_bounds(self, bounds, *args, **kwargs):
+    def set_bounds(self, bounds, *args, **kwargs) -> None:
         pass
 
-    def paint_background(self):
+    def paint_background(self) -> None:
         pass
 
     def _render_line(self, line, color):
@@ -110,7 +110,7 @@ class ExcellonContext(GerberContext):
             point[1] if point[1] != self._pos[1] else None,
         )
 
-    def _render_drill(self, drill, color):
+    def _render_drill(self, drill, color) -> None:
 
         if self.drill_mode != ExcellonContext.MODE_DRILL:
             self._start_drill_mode()
@@ -149,7 +149,7 @@ class ExcellonContext(GerberContext):
         else:
             raise ValueError("Should be in slot mode")
 
-    def _render_slot(self, slot, color):
+    def _render_slot(self, slot, color) -> None:
 
         # Set the tool first, before we might go into drill mode
         tool = slot.hit.tool
@@ -199,5 +199,5 @@ class ExcellonContext(GerberContext):
             self._pos = slot.end
             self.body.append(SlotStmt.from_points(slot.start, slot.end))
 
-    def _render_inverted_layer(self):
+    def _render_inverted_layer(self) -> None:
         pass

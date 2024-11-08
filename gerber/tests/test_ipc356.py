@@ -11,12 +11,12 @@ import os
 IPC_D_356_FILE = os.path.join(os.path.dirname(__file__), "resources/ipc-d-356.ipc")
 
 
-def test_read():
+def test_read() -> None:
     ipcfile = read(IPC_D_356_FILE)
     assert isinstance(ipcfile, IPCNetlist)
 
 
-def test_parser():
+def test_parser() -> None:
     ipcfile = read(IPC_D_356_FILE)
     assert ipcfile.settings.units == "inch"
     assert ipcfile.settings.angle_units == "degrees"
@@ -36,7 +36,7 @@ def test_parser():
     }
 
 
-def test_comment():
+def test_comment() -> None:
     c = IPC356_Comment("Layer Stackup:")
     assert c.comment == "Layer Stackup:"
     c = IPC356_Comment.from_line("C  Layer Stackup:   ")
@@ -45,7 +45,7 @@ def test_comment():
     assert str(c) == "<IPC-D-356 Comment: Layer Stackup:>"
 
 
-def test_parameter():
+def test_parameter() -> None:
     p = IPC356_Parameter("VER", "IPC-D-356A")
     assert p.parameter == "VER"
     assert p.value == "IPC-D-356A"
@@ -56,13 +56,13 @@ def test_parameter():
     assert str(p) == "<IPC-D-356 Parameter: VER=IPC-D-356A>"
 
 
-def test_eof():
+def test_eof() -> None:
     e = IPC356_EndOfFile()
     assert e.to_netlist() == "999"
     assert str(e) == "<IPC-D-356 EOF>"
 
 
-def test_outline():
+def test_outline() -> None:
     type = "BOARD_EDGE"
     points = [(0.01, 0.01), (2.0, 2.0), (4.0, 2.0), (4.0, 6.0)]
     b = IPC356_Outline(type, points)
@@ -76,7 +76,7 @@ def test_outline():
     assert b.points == points
 
 
-def test_test_record():
+def test_test_record() -> None:
     pytest.raises(ValueError, IPC356_TestRecord.from_line, "P  JOB", FileSettings())
     record_string = (
         "317+5VDC            VIA   -     D0150PA00X 006647Y 012900X0000          S3"

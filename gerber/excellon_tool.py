@@ -80,7 +80,7 @@ class ExcellonToolDefinitionParser(object):
         (allegro2_comment_mm, "mm"),
     ]
 
-    def __init__(self, settings=None):
+    def __init__(self, settings=None) -> None:
         self.tools = {}
         self.settings = settings
 
@@ -90,7 +90,7 @@ class ExcellonToolDefinitionParser(object):
 
         return self.tools
 
-    def _parse(self, line):
+    def _parse(self, line) -> None:
 
         for matcher in ExcellonToolDefinitionParser.matchers:
             m = matcher[0].match(line)
@@ -157,7 +157,7 @@ class ExcellonReportParser(object):
     # match the text - the best we can do it detect the table header
     header = re.compile(r"====\s+====\s+====\s+====\s+=====\s+===")
 
-    def __init__(self, settings=None):
+    def __init__(self, settings=None) -> None:
         self.tools = {}
         self.settings = settings
 
@@ -169,7 +169,7 @@ class ExcellonReportParser(object):
 
         return self.tools
 
-    def _parse(self, line):
+    def _parse(self, line) -> None:
 
         # skip empty lines and "comments"
         if not line.strip():
