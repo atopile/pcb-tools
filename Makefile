@@ -1,4 +1,3 @@
-
 PYTHON ?= python3
 PIP ?= pip3
 PYTEST ?= pytest
@@ -14,6 +13,7 @@ clean: doc-clean
 	rm -f .coverage
 	rm -f coverage.xml
 	rm -rf build
+	rm -rf dist
 
 .PHONY: test
 test:
@@ -27,8 +27,15 @@ test-coverage:
 
 .PHONY: install
 install:
-	#PYTHONPATH=. $(PYTHON) setup.py install <-- wrong! Use newer tools!
 	$(PIP) install .
+
+.PHONY: install-dev
+install-dev:
+	$(PIP) install -e ".[dev]"
+
+.PHONY: install-docs
+install-docs:
+	$(PIP) install -e ".[docs]"
 
 .PHONY: doc-html
 doc-html:

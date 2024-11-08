@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pcb-tools"
+version = "0.1.0"
+description = "Utilities to handle Gerber (RS-274X) files"
+readme = "README.md"
+authors = [
+    { name = "Paulo Henrique Silva", email = "ph.silva@gmail.com" },
+    { name = "Hamilton Kibbe", email = "ham@hamiltonkib.be" },
+]
+license = { text = "Apache-2.0" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: Apache Software License",
+]
+keywords = ["pcb", "gerber", "tools"]
+dependencies = [
+    "cairocffi==1.2.0",
+]
+requires-python = ">=3.7"
+
+[project.urls]
+Homepage = "https://github.com/MacroFab/pcb-tools"
+Repository = "https://github.com/MacroFab/pcb-tools.git"
+
+[project.scripts]
+gerber-render = "gerber.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gerber"]
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --cov=./ --cov-report=xml"
+testpaths = ["gerber/tests"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==6.2.4",
+    "pytest-cov==2.12.1",
+]
+docs = [
+    "Sphinx==4.1.2",
+    "numpydoc==1.1.0",
+]
+
+[tool.coverage.run]
+source = ["gerber"]
+omit = ["gerber/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+] 
