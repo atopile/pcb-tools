@@ -41,6 +41,8 @@ testpaths = ["gerber/tests"]
 dev = [
     "pytest==6.2.4",
     "pytest-cov==2.12.1",
+    "ruff==0.7.3",
+    "black==24.10.0",
 ]
 docs = [
     "Sphinx==4.1.2",
@@ -58,4 +60,4 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
     "pass",
-] 
+]
