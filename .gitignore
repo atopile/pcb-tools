@@ -49,3 +49,25 @@ Thumbs.db
 # Virtual environment
 venv
 coverage.xml
+
+# Python virtual environments
+.venv/
+env/
+ENV/
+.env/
+
+# Python testing
+.pytest_cache/
+htmlcov/
+.hypothesis/
+
+# Python linting/formatting
+.ruff_cache/
+.mypy_cache/
+.pyre/
+
+# Python build artifacts
+*.py[cod]
+*.pyo
+*.pyd
+.Python
