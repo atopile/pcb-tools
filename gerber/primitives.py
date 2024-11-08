@@ -623,7 +623,7 @@ class Circle(Primitive):
 
     @property
     def hole_radius(self):
-        if self.hole_diameter != None:
+        if self.hole_diameter is not None:
             return self.hole_diameter / 2.0
         return None
 
@@ -795,7 +795,7 @@ class Rectangle(Primitive):
     @property
     def hole_radius(self):
         """The radius of the hole. If there is no hole, returns None"""
-        if self.hole_diameter != None:
+        if self.hole_diameter is not None:
             return self.hole_diameter / 2.0
         return None
 
@@ -1237,7 +1237,7 @@ class Obround(Primitive):
     @property
     def hole_radius(self):
         """The radius of the hole. If there is no hole, returns None"""
-        if self.hole_diameter != None:
+        if self.hole_diameter is not None:
             return self.hole_diameter / 2.0
 
         return None
@@ -1334,7 +1334,7 @@ class Polygon(Primitive):
 
     @property
     def hole_radius(self):
-        if self.hole_diameter != None:
+        if self.hole_diameter is not None:
             return self.hole_diameter / 2.0
         return None
 

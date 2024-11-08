@@ -195,7 +195,7 @@ class ExcellonReportParser(object):
                     plated = ExcellonTool.PLATED_UNKNOWN
                 feedrate = int(parts[3])
                 speed = int(parts[4])
-                qty = int(parts[5])
+                int(parts[5])
 
                 tool = ExcellonTool(
                     None,

@@ -74,7 +74,7 @@ def test_line_bounds():
 def test_line_vertices():
     c = Circle((0, 0), 2)
     l = Line((0, 0), (1, 1), c)
-    assert l.vertices == None
+    assert l.vertices is None
 
     # All 4 compass points, all 4 quadrants and the case where start == end
     test_cases = [
@@ -318,18 +318,18 @@ def test_circle_conversion():
     c.to_metric()  # shouldn't do antyhing
     assert c.position == (2.54, 25.4)
     assert c.diameter == 254.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     c.to_inch()
     assert c.position == (0.1, 1.0)
     assert c.diameter == 10.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     # no effect
     c.to_inch()
     assert c.position == (0.1, 1.0)
     assert c.diameter == 10.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     # Circle initially metric, with hole
     c = Circle((2.54, 25.4), 254.0, 127.0, units="metric")
@@ -356,18 +356,18 @@ def test_circle_conversion():
     c.to_inch()
     assert c.position == (0.1, 1.0)
     assert c.diameter == 10.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     c.to_metric()
     assert c.position == (2.54, 25.4)
     assert c.diameter == 254.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     # no effect
     c.to_metric()
     assert c.position == (2.54, 25.4)
     assert c.diameter == 254.0
-    assert c.hole_diameter == None
+    assert c.hole_diameter is None
 
     c = Circle((0.1, 1.0), 10.0, 5.0, units="inch")
     # No effect
@@ -1055,7 +1055,6 @@ def test_region_ctor():
         Line((1, 1), (0, 1), apt),
         Line((0, 1), (0, 0), apt),
     )
-    points = ((0, 0), (1, 0), (1, 1), (0, 1))
     r = Region(lines)
     for i, p in enumerate(lines):
         assert r.primitives[i] == p

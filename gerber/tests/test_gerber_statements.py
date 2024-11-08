@@ -93,7 +93,7 @@ def test_MOParamStmt_factory():
 
     stmt = {"param": "MO"}
     mo = MOParamStmt.from_dict(stmt)
-    assert mo.mode == None
+    assert mo.mode is None
     stmt = {"param": "MO", "mo": "degrees kelvin"}
     pytest.raises(ValueError, MOParamStmt.from_dict, stmt)
 
@@ -903,16 +903,16 @@ def test_coordstmt_string():
 def test_aperturestmt_ctor():
     ast = ApertureStmt(3, False)
     assert ast.d == 3
-    assert ast.deprecated == False
+    assert ast.deprecated is False
     ast = ApertureStmt(4, True)
     assert ast.d == 4
-    assert ast.deprecated == True
+    assert ast.deprecated is True
     ast = ApertureStmt(4, 1)
     assert ast.d == 4
-    assert ast.deprecated == True
+    assert ast.deprecated is True
     ast = ApertureStmt(3)
     assert ast.d == 3
-    assert ast.deprecated == False
+    assert ast.deprecated is False
 
 
 def test_aperturestmt_dump():

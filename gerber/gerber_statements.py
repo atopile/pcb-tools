@@ -1123,12 +1123,12 @@ class CoordStmt(Statement):
         # TODO I would like to refactor this so that the function is handled separately and then
         # TODO this isn't required
         return (
-            self.function != None
-            and self.op == None
-            and self.x == None
-            and self.y == None
-            and self.i == None
-            and self.j == None
+            self.function is not None
+            and self.op is None
+            and self.x is None
+            and self.y is None
+            and self.i is None
+            and self.j is None
         )
 
 

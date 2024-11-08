@@ -54,7 +54,7 @@ def test_filesettings_dict_assign():
 
 def test_camfile_init():
     """Smoke test CamFile test"""
-    cf = CamFile()
+    CamFile()
 
 
 def test_camfile_settings():

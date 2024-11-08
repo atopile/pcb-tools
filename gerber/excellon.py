@@ -820,7 +820,7 @@ class ExcellonParser(object):
         """
 
         existing = self.tools.get(tool.number)
-        if existing and existing.plated == None:
+        if existing and existing.plated is None:
             existing.plated = tool.plated
 
         self.comment_tools[tool.number] = tool

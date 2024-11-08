@@ -209,7 +209,7 @@ class Rs274xContext(GerberContext):
         point = self._simplify_point(line.end)
 
         # In some files, we see a lot of duplicated ponts, so omit those
-        if point[0] != None or point[1] != None:
+        if point[0] is not None or point[1] is not None:
             self.body.append(CoordStmt.line(func, self._simplify_point(line.end)))
             self._pos = line.end
         elif func:
@@ -544,7 +544,7 @@ class Rs274xContext(GerberContext):
 
             # Store the dcode and the original so we can check if it really is the same
             # If it didn't have a postition, set it to 0, 0
-            if amgroup.position == None:
+            if amgroup.position is None:
                 amgroup.position = (0, 0)
             macro = (aperdef, amgroup)
 

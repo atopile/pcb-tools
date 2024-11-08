@@ -913,9 +913,9 @@ class SlotStmt(ExcellonStatement):
         (x_end_coord, y_end_coord) = SlotStmt.parse_sub_coords(sub_coords[1], settings)
 
         # Some files seem to specify only one of the coordinates
-        if x_end_coord == None:
+        if x_end_coord is None:
             x_end_coord = x_start_coord
-        if y_end_coord == None:
+        if y_end_coord is None:
             y_end_coord = y_start_coord
 
         c = cls(x_start_coord, y_start_coord, x_end_coord, y_end_coord, **kwargs)

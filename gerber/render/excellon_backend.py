@@ -136,7 +136,7 @@ class ExcellonContext(GerberContext):
         if self.drill_mode == ExcellonContext.MODE_SLOT:
 
             # Make sure we are retracted before changing modes
-            last_cmd = self.body[-1]
+            self.body[-1]
             if self.drill_down:
                 self.body.append(RetractWithClampingStmt())
                 self.body.append(RetractWithoutClampingStmt())

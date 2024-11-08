@@ -140,13 +140,13 @@ def test_toolselection_factory():
     """Test ToolSelectionStmt factory method"""
     stmt = ToolSelectionStmt.from_excellon("T01")
     assert stmt.tool == 1
-    assert stmt.compensation_index == None
+    assert stmt.compensation_index is None
     stmt = ToolSelectionStmt.from_excellon("T0223")
     assert stmt.tool == 2
     assert stmt.compensation_index == 23
     stmt = ToolSelectionStmt.from_excellon("T042")
     assert stmt.tool == 42
-    assert stmt.compensation_index == None
+    assert stmt.compensation_index is None
 
 
 def test_toolselection_dump():
@@ -440,10 +440,10 @@ def test_endofprogramstmt_factory():
     settings.units = "metric"
     stmt = EndOfProgramStmt.from_excellon("M30X01", settings)
     assert stmt.x == 1.0
-    assert stmt.y == None
+    assert stmt.y is None
     assert stmt.units == "metric"
     stmt = EndOfProgramStmt.from_excellon("M30Y02", FileSettings())
-    assert stmt.x == None
+    assert stmt.x is None
     assert stmt.y == 2.0
 
 

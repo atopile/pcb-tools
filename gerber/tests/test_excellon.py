@@ -58,7 +58,7 @@ def test_bounding_box():
 
 def test_report():
     ncdrill = read(NCDRILL_FILE)
-    rprt = ncdrill.report()
+    ncdrill.report()
 
 
 def test_conversion():
@@ -103,7 +103,7 @@ def test_parser_hole_sizes():
 
 def test_parse_whitespace():
     p = ExcellonParser(FileSettings())
-    assert p._parse_line("         ") == None
+    assert p._parse_line("         ") is None
 
 
 def test_parse_comment():
